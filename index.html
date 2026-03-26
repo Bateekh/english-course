@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>كورس الإنجليزي - سنة كاملة</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','Arial',sans-serif;background:#f0f4f8;min-height:100vh;color:#1e293b}
+#app{max-width:500px;margin:0 auto;padding:0 0 80px 0}
+header{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:20px;text-align:center}
+header h1{font-size:1.4rem;margin-bottom:4px}
+header p{font-size:0.85rem;opacity:0.9}
+.progress-bar{background:rgba(255,255,255,0.2);height:8px;border-radius:4px;margin-top:12px;overflow:hidden}
+.progress-fill{background:#fbbf24;height:100%;border-radius:4px;transition:width 0.5s}
+.progress-text{font-size:0.75rem;margin-top:4px;opacity:0.8}
+.months{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #e2e8f0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.months::-webkit-scrollbar{display:none}
+.month-tab{flex-shrink:0;padding:12px 16px;font-size:0.8rem;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;color:#64748b;transition:all 0.2s}
+.month-tab.active{color:#1e40af;border-bottom-color:#1e40af;font-weight:bold}
+.month-tab .check{color:#16a34a;margin-right:4px}
+.lesson-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid #e2e8f0}
+.lesson-nav span{font-size:0.85rem;color:#64748b}
+.lesson-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:60%}
+.dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;cursor:pointer;transition:all 0.2s}
+.dot.done{background:#16a34a}
+.dot.current{background:#3b82f6;transform:scale(1.3)}
+.card{background:#fff;margin:16px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);overflow:hidden}
+.card-header{padding:16px 20px 8px;display:flex;justify-content:space-between;align-items:center}
+.day-num{font-size:0.8rem;color:#94a3b8}
+.card-body{padding:8px 20px 20px}
+.english-sentence{direction:ltr;text-align:left;font-size:1.6rem;line-height:1.6;color:#1e293b;padding:16px 0;font-weight:500;cursor:pointer;unicode-bidi:plaintext}
+.english-sentence:active{color:#3b82f6}
+.word-mode{direction:ltr;text-align:left;display:flex;flex-wrap:wrap;gap:8px;padding:16px 0}
+.word-btn{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;border-radius:8px;padding:8px 14px;font-size:1.2rem;cursor:pointer;transition:all 0.15s}
+.word-btn:active{background:#1e40af;color:#fff}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.btn{border:none;border-radius:10px;padding:10px 16px;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;font-family:inherit}
+.btn:active{transform:scale(0.96)}
+.btn-listen{background:#eff6ff;color:#1e40af}
+.btn-translate{background:#f0fdf4;color:#166534}
+.btn-tip{background:#fef3c7;color:#92400e}
+.btn-words{background:#fdf2f8;color:#9d174d}
+.btn-complete{background:#16a34a;color:#fff;width:100%;justify-content:center;padding:12px;margin-top:8px;font-size:0.95rem}
+.btn-complete.done{background:#e2e8f0;color:#64748b}
+.translation{direction:rtl;text-align:right;background:#f0fdf4;padding:14px;border-radius:10px;margin-top:12px;font-size:1.1rem;line-height:1.8;color:#166534;display:none}
+.translation.show{display:block}
+.tip{direction:rtl;text-align:right;background:#fef3c7;padding:14px;border-radius:10px;margin-top:8px;font-size:0.95rem;line-height:1.8;color:#92400e;display:none}
+.tip.show{display:block}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;padding:12px 20px;max-width:500px;margin:0 auto;z-index:10}
+.nav-btn{background:#3b82f6;color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:0.9rem;cursor:pointer;font-family:inherit}
+.nav-btn:disabled{background:#e2e8f0;color:#94a3b8}
+.nav-btn:active{background:#1d4ed8}
+.lesson-count{display:flex;align-items:center;font-size:0.85rem;color:#64748b}
+.welcome{padding:30px 20px;text-align:center}
+.welcome h2{font-size:1.5rem;margin-bottom:16px;color:#1e40af}
+.welcome p{font-size:1rem;line-height:1.8;color:#475569;margin-bottom:12px}
+.welcome .start-btn{background:#1e40af;color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:1.1rem;cursor:pointer;margin-top:20px;font-family:inherit}
+.month-title{padding:12px 20px;font-size:0.85rem;color:#64748b;text-align:center;background:#f8fafc}
+.gear-btn{position:absolute;left:16px;top:20px;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:0.85}
+.gear-btn:active{opacity:1}
+header{position:relative}
+.backup-panel{background:#fff;margin:16px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:20px;display:none}
+.backup-panel.show{display:block}
+.backup-panel h3{font-size:1.1rem;margin-bottom:12px;color:#1e40af}
+.backup-panel p{font-size:0.9rem;color:#475569;line-height:1.7;margin-bottom:12px}
+.backup-panel textarea{width:100%;height:80px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:0.85rem;font-family:monospace;direction:ltr;resize:none;margin-bottom:8px}
+.backup-panel .bp-btn{background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:0.9rem;cursor:pointer;margin-left:8px;font-family:inherit}
+.backup-panel .bp-btn.restore{background:#16a34a}
+.backup-panel .bp-btn.close{background:#94a3b8}
+.bp-msg{font-size:0.85rem;margin-top:8px;padding:8px;border-radius:6px;display:none}
+.bp-msg.ok{display:block;background:#f0fdf4;color:#166534}
+.bp-msg.err{display:block;background:#fef2f2;color:#991b1b}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const MS=[
+{n:"التحيات والأساسيات",e:"Greetings & Basics",c:31},
+{n:"العيلة والناس",e:"Family & People",c:28},
+{n:"الأرقام والوقت",e:"Numbers & Time",c:31},
+{n:"الأكل والشرب",e:"Food & Drink",c:30},
+{n:"التسوق والمصاري",e:"Shopping & Money",c:31},
+{n:"البيت والروتين",e:"Home & Routine",c:30},
+{n:"الاتجاهات والمواصلات",e:"Directions & Transport",c:31},
+{n:"الصحة والجسم",e:"Health & Body",c:31},
+{n:"الشغل والمدرسة",e:"Work & School",c:30},
+{n:"الطقس والطبيعة",e:"Weather & Nature",c:31},
+{n:"المشاعر والآراء",e:"Feelings & Opinions",c:30},
+{n:"مراجعة ومحادثات",e:"Review & Conversations",c:31}
+];
+const L=[
+// === Month 1: التحيات والأساسيات (31) ===
+["Hello!","!مرحبا","\"Hello\" هي أبسط تحية بالإنجليزي. بتنقال بأي وقت من النهار."],
+["Good morning.","صباح الخير.","\"Good\" = منيح. \"Morning\" = صباح. بالإنجليزي الصفة بتيجي قبل الاسم."],
+["Good evening.","مساء الخير.","\"Evening\" = مسا. نفس القاعدة: Good + وقت من اليوم."],
+["How are you?","كيفك؟","\"How\" = كيف. الأسئلة بالإنجليزي كتير بتبلش بـ How أو What أو Where."],
+["I am fine, thank you.","أنا منيحة، شكراً.","\"I am\" = أنا. بالإنجليزي لازم تحطي \"am\" بعد \"I\" دايماً."],
+["What is your name?","شو اسمك؟","\"What\" = شو. \"Your\" = تبعك. \"Name\" = اسم."],
+["My name is Sara.","اسمي سارة.","\"My\" = تبعي. لاحظي: \"my name\" مش \"name my\". الصفة قبل الاسم."],
+["Nice to meet you.","تشرفنا.","جملة جاهزة بتنقال لما تتعرفي على حدا جديد."],
+["Where are you from?","من وين إنتي؟","\"Where\" = وين. \"From\" = من."],
+["I am from Jordan.","أنا من الأردن.","\"I am from\" + اسم البلد. أسماء البلدان بالإنجليزي بتبلش بحرف كبير."],
+["I live in America.","أنا ساكنة بأمريكا.","\"Live\" = بعيش. \"In\" = بـ. بنقول \"in\" قبل أسماء البلدان والمدن."],
+["I speak Arabic.","أنا بحكي عربي.","\"Speak\" = بحكي. أسماء اللغات بتبلش بحرف كبير: Arabic, English, French."],
+["I am learning English.","أنا عم بتعلم إنجليزي.","\"Am learning\" = عم بتعلم. \"Am + verb+ing\" بتعني عم تعملي الشي هلق."],
+["Please speak slowly.","من فضلك احكي ببطء.","\"Please\" = لو سمحت. \"Slowly\" = ببطء. ممكن تحطيها بأول أو آخر الجملة."],
+["Can you repeat that?","فيك تعيد؟","\"Can you...?\" = فيك...؟ طريقة مهذبة تطلبي شي من حدا."],
+["I don't understand.","ما فهمت.","\"Don't\" = ما/مش. لما بدك تنفي شي بتحطي \"don't\" قبل الفعل."],
+["Thank you very much.","شكراً كتير.","\"Very much\" = كتير. بتيجي بآخر الجملة للتأكيد."],
+["You are welcome.","أهلاً وسهلاً.","هاي بتنقال رد على \"Thank you\". ما بتعني \"مرحبا\" هون."],
+["Excuse me.","عن إذنك.","بتنقال لما بدك تلفتي انتباه حدا أو تمري من قدامه."],
+["I am sorry.","آسفة.","\"Sorry\" = آسف. بتنقال لما تعتذري عن شي."],
+["Yes, please.","أيوا، لو سمحت.","جواب مهذب لما حدا يعرض عليكي شي."],
+["No, thank you.","لا، شكراً.","طريقة مهذبة ترفضي عرض حدا."],
+["Goodbye!","!مع السلامة","\"Goodbye\" أو \"Bye\" بتنقال لما تودعي حدا."],
+["See you later.","بشوفك بعدين.","\"See you\" = بشوفك. \"Later\" = بعدين. وداع غير رسمي."],
+["See you tomorrow.","بشوفك بكرا.","\"Tomorrow\" = بكرا. بتقدري تقولي: See you + أي وقت."],
+["Have a nice day.","نهارك سعيد.","جملة بتنقال للوداع كتمنيات. \"Day\" = يوم. \"Nice\" = حلو."],
+["How is your day going?","كيف نهارك ماشي؟","\"Going\" هون بتعني ماشي. سؤال عن كيف يومك."],
+["My day is going well.","نهاري ماشي منيح.","\"Well\" = منيح. بنستعملها مع الأفعال. \"Good\" مع الأسماء."],
+["It is nice to meet you.","فرصة سعيدة.","\"It is\" بتنقال كتير بالإنجليزي لتبليش جمل."],
+["Welcome to our home.","أهلاً ببيتنا.","\"Our\" = تبعنا. مثل \"my\" بس للجماعة."],
+["It was nice talking to you.","كان حلو الحكي معك.","\"Was\" = كان. ماضي \"is\". بنقولها لما نودع حدا حكينا معه."],
+// === Month 2: العيلة والناس (28) ===
+["This is my husband.","هاد زوجي.","\"This is\" = هاد/هاي. بنستعملها لما نعرّف عن حدا."],
+["This is my wife.","هاي مرتي.","\"Wife\" = زوجة. \"Husband\" = زوج."],
+["I have two children.","عندي ولدين.","\"I have\" = عندي. \"Children\" جمع \"child\" = ولد."],
+["My son is five years old.","ابني عمره خمس سنين.","\"Years old\" = عمره...سنين. بالإنجليزي بنقول الرقم + years old."],
+["My daughter is three years old.","بنتي عمرها تلات سنين.","\"Daughter\" = بنت. \"Son\" = ابن."],
+["He is my brother.","هو أخوي.","\"He\" = هو. \"She\" = هي. \"He\" للذكر، \"She\" للأنثى."],
+["She is my sister.","هي أختي.","\"Sister\" = أخت. \"Brother\" = أخ."],
+["My mother is very kind.","أمي كتير طيبة.","\"Kind\" = طيب/لطيف. الصفات بالإنجليزي ما بتتغير حسب المذكر والمؤنث."],
+["My father works hard.","أبوي بشتغل كتير.","\"Works\" لاحظي الـ s بالآخر. مع he/she/it بنضيف s للفعل."],
+["We are a big family.","نحنا عيلة كبيرة.","\"We are\" = نحنا. \"Big\" = كبير. \"Small\" = صغير."],
+["Do you have children?","عندك ولاد؟","\"Do you have...?\" = عندك...؟ طريقة تسألي سؤال بالإنجليزي."],
+["How old is your son?","قديش عمر ابنك؟","\"How old\" = قديش العمر. بنقول: How old is + الشخص؟"],
+["She looks like her mother.","هي شبه أمها.","\"Looks like\" = شبه. \"Her\" = تبعها. \"His\" = تبعه."],
+["He looks like his father.","هو شبه أبوه.","\"His\" = تبعه (للذكر). \"Her\" = تبعها (للأنثى)."],
+["My baby is sleeping.","البيبي نايم.","\"Is sleeping\" = عم ينام. \"Is + verb+ing\" = عم يعمل الشي هلق."],
+["The children are playing.","الولاد عم يلعبوا.","\"Are playing\" = عم يلعبوا. مع جمع بنقول \"are\" مش \"is\"."],
+["My family is in Jordan.","عيلتي بالأردن.","\"Family\" = عيلة. كلمة مفردة بتتعامل معها كوحدة."],
+["I miss my family.","مشتاقة لعيلتي.","\"Miss\" = مشتاق لـ. بنقول: I miss + الشخص أو المكان."],
+["We talk on the phone every day.","بنحكي عالتلفون كل يوم.","\"Every day\" = كل يوم. \"Every\" = كل."],
+["My uncle lives near us.","عمي ساكن قريب مننا.","\"Near\" = قريب. \"Far\" = بعيد. \"Us\" = نحنا (مفعول به)."],
+["My aunt is visiting us.","خالتي جاية تزورنا.","\"Is visiting\" = عم تزور. \"Aunt\" = خالة أو عمة."],
+["He is a tall man.","هو رجال طويل.","\"Tall\" = طويل. \"Short\" = قصير. الصفة قبل الاسم: tall man."],
+["She is a beautiful woman.","هي مرا حلوة.","\"Beautiful\" = حلو/جميل. \"Woman\" = مرا. \"Man\" = رجال."],
+["The boy is very smart.","الولد كتير شاطر.","\"Smart\" = شاطر/ذكي. \"The\" = الـ. بنحطها قبل اسم محدد."],
+["The girl is very polite.","البنت كتير مأدبة.","\"Polite\" = مأدب. \"Rude\" = قليل أدب."],
+["They are good people.","هم ناس منيحين.","\"They\" = هم. \"People\" = ناس. كلمة جمع."],
+["She has brown eyes.","عيونها بنية.","\"Has\" بدل \"have\" مع he/she/it. \"Brown\" = بني. \"Eyes\" = عيون."],
+["He has black hair.","شعره أسود.","\"Hair\" = شعر. الألوان: black أسود، brown بني، blonde أشقر."],
+// === Month 3: الأرقام والوقت (31) ===
+["Today is Monday.","اليوم الإثنين.","أيام الأسبوع بالإنجليزي بتبلش بحرف كبير دايماً."],
+["Tomorrow is Tuesday.","بكرا الثلاثاء.","\"Tomorrow\" = بكرا. \"Yesterday\" = مبارح."],
+["Yesterday was Sunday.","مبارح كان الأحد.","\"Was\" = كان. ماضي \"is\". بنقول: Yesterday was..."],
+["What day is today?","شو اليوم؟","\"What day\" = شو اليوم. سؤال عن اليوم."],
+["It is ten o'clock.","الساعة عشرة.","\"O'clock\" بتيجي بعد الرقم لما تقولي الساعة بالضبط."],
+["What time is it?","قديش الساعة؟","\"What time\" = قديش الساعة. سؤال عن الوقت."],
+["I wake up at seven.","بصحى الساعة سبعة.","\"At\" = الساعة. بنقول \"at\" قبل الساعة: at seven, at nine."],
+["School starts at eight.","المدرسة بتبلش الساعة تمانة.","\"Starts\" = بتبلش. لاحظي الـ s لأنو مع مفرد (school)."],
+["We eat lunch at twelve.","بنتغدى الساعة اثنعش.","\"Lunch\" = غدا. \"Breakfast\" = فطور. \"Dinner\" = عشا."],
+["I go to bed at ten.","بنام الساعة عشرة.","\"Go to bed\" = بروح أنام. تعبير جاهز بالإنجليزي."],
+["I have one apple.","عندي تفاحة وحدة.","\"One\" = واحد. الأرقام: one, two, three, four, five."],
+["I need two cups.","بدي كاستين.","\"Two\" = اثنين. بالإنجليزي بنضيف s للجمع: cup → cups."],
+["There are three chairs.","في تلات كراسي.","\"There are\" = في (للجمع). \"There is\" = في (للمفرد)."],
+["She has four books.","عندها أربع كتب.","\"Four\" = أربعة. \"Books\" جمع \"book\"."],
+["We have five rooms.","عنا خمس غرف.","\"Five\" = خمسة. six ستة، seven سبعة، eight تمانة، nine تسعة، ten عشرة."],
+["I bought ten eggs.","اشتريت عشر بيضات.","\"Bought\" = اشتريت. ماضي \"buy\". بالإنجليزي كل فعل إله شكل ماضي."],
+["It costs twenty dollars.","بتكلف عشرين دولار.","\"Costs\" = بتكلف. \"Twenty\" = عشرين."],
+["There are thirty days in a month.","في تلاتين يوم بالشهر.","\"In a month\" = بالشهر. \"In\" = بـ/في. بنقولها مع الأشهر والسنين."],
+["He is forty years old.","هو عمره أربعين سنة.","\"Forty\" = أربعين. الأعداد العشرات: thirty, forty, fifty, sixty."],
+["There are fifty students.","في خمسين طالب.","\"Students\" = طلاب. \"Student\" = طالب."],
+["I have a hundred pages to read.","عندي مية صفحة أقرأها.","\"A hundred\" = مية. \"A thousand\" = ألف."],
+["The meeting is at two thirty.","الاجتماع الساعة اثنين ونص.","\"Two thirty\" = 2:30. بنقول الساعة + الدقائق: two thirty = اثنين وتلاتين."],
+["I will be there in fifteen minutes.","بكون هنيك بعد ربع ساعة.","\"In fifteen minutes\" = بعد ربع ساعة. \"Minutes\" = دقائق."],
+["January is the first month.","كانون التاني هو أول شهر.","\"First\" = أول. الترتيب: first, second, third, fourth, fifth."],
+["My birthday is in March.","عيد ميلادي بشهر آذار.","\"In\" + الشهر: in March, in June, in December."],
+["Summer starts in June.","الصيف ببلش بحزيران.","الفصول: summer صيف، winter شتي، spring ربيع، fall خريف."],
+["I have an appointment on Wednesday.","عندي موعد يوم الأربعاء.","\"On\" + يوم: on Monday, on Tuesday. \"On\" بنستعملها مع الأيام."],
+["The weekend is Saturday and Sunday.","نهاية الأسبوع السبت والأحد.","\"Weekend\" = نهاية الأسبوع. \"And\" = و."],
+["What is the date today?","شو التاريخ اليوم؟","\"Date\" = تاريخ. مختلفة عن \"day\" = يوم."],
+["It is the fifteenth of March.","اليوم خمستعش آذار.","\"Fifteenth\" = الخامس عشر. بنضيف th للأعداد الترتيبية: fifth, sixth, seventh."],
+["We are in the year two thousand twenty-six.","نحنا بسنة ألفين وستة وعشرين.","\"Year\" = سنة. بنقول السنة كرقم كامل."],
+// === Month 4: الأكل والشرب (30) ===
+["I am hungry.","أنا جوعانة.","\"Hungry\" = جوعان. \"I am\" + صفة = أنا + صفة."],
+["I am thirsty.","أنا عطشانة.","\"Thirsty\" = عطشان. نفس القاعدة: I am + الحالة."],
+["What do you want to eat?","شو بدك تاكلي؟","\"Want to eat\" = بدك تاكلي. \"Want to\" + فعل = بدك + فعل."],
+["I want water, please.","بدي مي، لو سمحت.","\"I want\" = بدي. \"Water\" = مي. كلمة \"water\" ما بتنجمع."],
+["I like chicken and rice.","بحب الدجاج والرز.","\"I like\" = بحب. \"Like\" + اسم = بحب + شي."],
+["This food is delicious.","هالأكل طيب.","\"Delicious\" = طيب/لذيذ. \"Food\" = أكل."],
+["Can I have the menu, please?","ممكن المنيو لو سمحت؟","\"Can I have...?\" = ممكن...؟ طريقة مهذبة تطلبي شي بالمطعم."],
+["I would like a cup of coffee.","بدي فنجان قهوة.","\"I would like\" = بدي. أكتر من \"I want\" بالأدب. بنستعملها بالمطاعم."],
+["Do you want sugar in your tea?","بدك سكر بالشاي؟","\"Sugar\" = سكر. \"Tea\" = شاي. \"Coffee\" = قهوة."],
+["I don't eat meat.","ما باكل لحمة.","\"Don't eat\" = ما باكل. \"Don't\" + فعل = نفي بالحاضر."],
+["We need bread and milk.","بدنا خبز وحليب.","\"Need\" = بدنا/بنحتاج. \"Bread\" = خبز. \"Milk\" = حليب."],
+["The fruit is very fresh.","الفواكه كتير طازة.","\"Fresh\" = طازة. \"Fruit\" = فواكه. غالباً ما بتنجمع بالإنجليزي."],
+["I like to cook at home.","بحب أطبخ بالبيت.","\"Like to cook\" = بحب أطبخ. \"Like to\" + فعل = بحب أعمل شي."],
+["What is for dinner tonight?","شو العشا الليلة؟","\"Tonight\" = الليلة. \"Today\" = اليوم. \"This morning\" = هالصبح."],
+["Let me make you something to eat.","خليني أعملك أكل.","\"Let me\" = خليني. \"Something\" = شي."],
+["Please pass me the salt.","من فضلك ناولني الملح.","\"Pass\" = ناول. \"Salt\" = ملح. \"Pepper\" = فلفل."],
+["The soup is very hot.","الشوربة كتير سخنة.","\"Hot\" = سخن (للحرارة) أو حار (للأكل). \"Cold\" = بارد."],
+["I don't like spicy food.","ما بحب الأكل الحار.","\"Spicy\" = حار. \"Don't like\" = ما بحب."],
+["Would you like some more?","بدك كمان شوي؟","\"Some more\" = كمان شوي. \"Some\" = شوي/بعض."],
+["No, I am full. Thank you.","لا، شبعت. شكراً.","\"Full\" = شبعان. بنقولها لما نخلص أكل."],
+["We eat breakfast at seven.","بنتفطر الساعة سبعة.","\"Breakfast\" = فطور. \"Eat breakfast\" = بتفطر."],
+["I drink orange juice every morning.","بشرب عصير برتقال كل صبح.","\"Orange juice\" = عصير برتقال. لاحظي: النوع + juice."],
+["The vegetables are in the fridge.","الخضرا بالبراد.","\"Vegetables\" = خضرا. \"Fridge\" = براد."],
+["I need to buy groceries.","لازم أشتري أغراض.","\"Need to\" = لازم. \"Groceries\" = أغراض البيت."],
+["This cake is very good.","هالكيكة كتير طيبة.","\"Cake\" = كيكة. \"Good\" = منيح/طيب."],
+["He likes pizza very much.","هو بحب البيتزا كتير.","مع he/she/it بنضيف s: like → likes, eat → eats, drink → drinks."],
+["We are going to a restaurant.","رايحين عمطعم.","\"Restaurant\" = مطعم. \"Going to\" = رايحين."],
+["Can I have the bill, please?","ممكن الحساب لو سمحت؟","\"Bill\" أو \"check\" = الحساب بالمطعم."],
+["I will cook rice and chicken today.","اليوم رح أطبخ رز ودجاج.","\"I will\" = رح. \"Will\" + فعل = المستقبل."],
+["Wash your hands before eating.","اغسلي إيديكي قبل الأكل.","\"Before\" = قبل. \"After\" = بعد. أمر: wash = اغسلي."],
+// === Month 5: التسوق والمصاري (31) ===
+["I need to go shopping.","لازم أروح أتسوق.","\"Go shopping\" = أروح أتسوق. تعبير جاهز."],
+["Where is the nearest store?","وين أقرب دكانة؟","\"Nearest\" = أقرب. \"Near\" قريب → \"nearest\" الأقرب."],
+["How much does this cost?","قديش هاد؟","\"How much\" = قديش. بنسأل عن السعر."],
+["This is too expensive.","هاد غالي كتير.","\"Too\" = كتير (بمعنى أكتر من اللازم). \"Expensive\" = غالي."],
+["Do you have a smaller size?","عندكم قياس أصغر؟","\"Smaller\" = أصغر. بنضيف er: small → smaller, big → bigger."],
+["I want to buy a dress.","بدي أشتري فستان.","\"Buy\" = أشتري. \"Dress\" = فستان. \"Shirt\" = قميص."],
+["What color do you want?","شو اللون اللي بدك ياه؟","الألوان: red أحمر، blue أزرق، green أخضر، yellow أصفر، white أبيض."],
+["I like the blue one.","بحب الأزرق.","\"The blue one\" = الأزرق. \"One\" هون بتعني الشي اللي عم نحكي عنه."],
+["Can I try this on?","ممكن أقيسه؟","\"Try on\" = أقيس (ملابس). \"Try\" = جرب."],
+["Where is the fitting room?","وين غرفة القياس؟","\"Fitting room\" = غرفة القياس بالمحل."],
+["I will pay with my card.","بدي أدفع بالكرت.","\"Pay\" = أدفع. \"Card\" = بطاقة. \"Cash\" = كاش/نقد."],
+["Do you accept cash?","بتقبلوا كاش؟","\"Accept\" = بتقبلوا. \"Do you accept...?\" = بتقبلوا...؟"],
+["I need a bag, please.","بدي كيس لو سمحت.","\"Bag\" = كيس. \"Plastic bag\" = كيس نايلون."],
+["Where can I find shoes?","وين ألاقي صباطات؟","\"Shoes\" = صباطات. \"Where can I find...?\" = وين ألاقي...؟"],
+["This shirt fits me well.","هالقميص مناسب عليي.","\"Fits\" = مناسب. \"Well\" = منيح."],
+["I want to return this.","بدي أرجع هاد.","\"Return\" = أرجع. بالمحلات بتقدري ترجعي البضاعة."],
+["Do you have this in red?","عندكم هاد بالأحمر؟","\"In red\" = بالأحمر. بنقول: in + اللون."],
+["The sale starts tomorrow.","التنزيلات ببلشوا بكرا.","\"Sale\" = تنزيلات/تخفيضات. \"On sale\" = عليه تنزيلات."],
+["I saved fifty dollars.","وفرت خمسين دولار.","\"Saved\" = وفرت. ماضي \"save\". \"Dollar\" = دولار."],
+["We need to buy school supplies.","لازم نشتري أغراض مدرسة.","\"School supplies\" = أغراض مدرسة. \"Supplies\" = لوازم."],
+["I bought a gift for my friend.","اشتريت هدية لصاحبتي.","\"Bought\" = اشتريت. \"Gift\" = هدية. \"For\" = لـ."],
+["The pharmacy is next to the bank.","الصيدلية جنب البنك.","\"Next to\" = جنب. \"Pharmacy\" = صيدلية. \"Bank\" = بنك."],
+["I need to pay the electricity bill.","لازم أدفع فاتورة الكهرباء.","\"Bill\" = فاتورة. \"Electricity\" = كهرباء. \"Water bill\" = فاتورة المي."],
+["We go grocery shopping on Saturdays.","بنروح نتسوق أغراض يوم السبت.","\"On Saturdays\" = كل سبت. الجمع + on = كل أسبوع بهاليوم."],
+["I found a good deal.","لقيت عرض منيح.","\"Found\" = لقيت. ماضي \"find\". \"Deal\" = عرض/صفقة."],
+["How much is the total?","قديش المجموع؟","\"Total\" = المجموع. بنسأل هيك عند الكاشير."],
+["Can I get a discount?","ممكن تنزيل؟","\"Discount\" = تنزيل/خصم. \"Can I get...?\" = ممكن...؟"],
+["I want to open a bank account.","بدي أفتح حساب بالبنك.","\"Open\" = أفتح. \"Account\" = حساب. \"Bank account\" = حساب بنكي."],
+["I need to send money to my family.","لازم أبعت مصاري لعيلتي.","\"Send\" = أبعت. \"Money\" = مصاري. ما بتنجمع money."],
+["Keep the change.","خلي الباقي إلك.","\"Change\" = الباقي (من المصاري). \"Keep\" = خلي."],
+["The mall is very big.","المول كتير كبير.","\"Mall\" = مول/مجمع تجاري. \"Big\" = كبير."],
+// === Month 6: البيت والروتين (30) ===
+["I wake up early every morning.","بصحى بكير كل صبح.","\"Wake up\" = بصحى. \"Early\" = بكير. \"Every\" = كل."],
+["I brush my teeth after breakfast.","بنظف أسناني بعد الفطور.","\"Brush teeth\" = نظف الأسنان. \"After\" = بعد."],
+["The children go to school at eight.","الولاد بروحوا عالمدرسة الساعة تمانة.","\"Go to school\" = بروح عالمدرسة. بدون \"the\": go to school."],
+["I clean the house every day.","بنظف البيت كل يوم.","\"Clean\" = بنظف. ممكن تكون فعل أو صفة."],
+["I wash the dishes after dinner.","بجلي الصحون بعد العشا.","\"Wash the dishes\" = جلي الصحون. \"Dishes\" = صحون."],
+["I do the laundry on Monday.","بغسل الغسيل يوم الإثنين.","\"Do the laundry\" = بغسل الغسيل. تعبير جاهز."],
+["The living room is clean.","غرفة الجلوس نظيفة.","\"Living room\" = غرفة الجلوس. \"Bedroom\" = غرفة النوم."],
+["The kitchen is big and nice.","المطبخ كبير وحلو.","\"Kitchen\" = مطبخ. \"Bathroom\" = حمام."],
+["We have three bedrooms.","عنا تلت غرف نوم.","\"Bedroom\" = غرفة نوم. \"Bed\" = تخت. \"Room\" = غرفة."],
+["The bathroom is upstairs.","الحمام فوق.","\"Upstairs\" = فوق. \"Downstairs\" = تحت."],
+["Please close the door.","من فضلك سكر الباب.","\"Close\" = سكر. \"Open\" = افتح. أوامر: بنستعمل الفعل مباشرة."],
+["Open the window, please.","افتح الشباك لو سمحت.","\"Window\" = شباك. \"Door\" = باب."],
+["Turn on the light.","ولع الضو.","\"Turn on\" = شغّل/ولّع. \"Turn off\" = طفّي."],
+["Turn off the TV.","طفي التلفزيون.","\"TV\" = تلفزيون. \"Turn off\" = طفّي."],
+["I cook dinner at six.","بطبخ العشا الساعة ستة.","\"Cook\" = بطبخ. \"Dinner\" = عشا."],
+["The children do homework after school.","الولاد بعملوا وظايفهم بعد المدرسة.","\"Homework\" = وظايف/فروض. \"After school\" = بعد المدرسة."],
+["We eat dinner together.","بنتعشى سوا.","\"Together\" = سوا/مع بعض."],
+["I read a book before bed.","بقرأ كتاب قبل ما أنام.","\"Before\" = قبل. \"Before bed\" = قبل النوم."],
+["I go to bed at ten thirty.","بنام الساعة عشرة ونص.","\"Ten thirty\" = عشرة ونص. \"Half past ten\" نفس المعنى."],
+["The garden is very beautiful.","الحديقة كتير حلوة.","\"Garden\" = حديقة. \"Beautiful\" = حلو/جميل."],
+["We need to fix the sink.","لازم نصلح المجلى.","\"Fix\" = صلّح. \"Sink\" = مجلى. \"We need to\" = لازم."],
+["The neighbor is very friendly.","الجار كتير لطيف.","\"Neighbor\" = جار. \"Friendly\" = لطيف/ودود."],
+["Please take out the trash.","من فضلك طلع الزبالة.","\"Take out\" = طلّع. \"Trash\" = زبالة. \"Take out the trash\" تعبير يومي."],
+["I vacuum the carpet every week.","بشفط السجادة كل أسبوع.","\"Vacuum\" = بشفط. \"Carpet\" = سجادة. \"Every week\" = كل أسبوع."],
+["The rent is due on the first.","الإيجار لازم يندفع أول الشهر.","\"Rent\" = إيجار. \"Due\" = مستحق. \"On the first\" = أول الشهر."],
+["I need to buy new curtains.","لازم أشتري ستاير جديدة.","\"New\" = جديد. \"Curtains\" = ستاير. \"New\" + اسم."],
+["The air conditioner is not working.","المكيف مش شغال.","\"Is not working\" = مش شغال/مش عم يشتغل. \"Not\" = مش."],
+["I lock the door at night.","بسكر الباب بالليل.","\"Lock\" = بسكر بالمفتاح. \"At night\" = بالليل."],
+["We painted the walls white.","دهنا الحيطان أبيض.","\"Painted\" = دهنّا. ماضي \"paint\". \"Walls\" = حيطان."],
+["I need to organize the closet.","لازم أرتب الخزانة.","\"Organize\" = رتّب. \"Closet\" = خزانة."],
+// === Month 7: الاتجاهات والمواصلات (31) ===
+["Where is the hospital?","وين المستشفى؟","\"Where is...?\" = وين...؟ أكتر سؤال بتحتاجيه لما تدوري على مكان."],
+["Go straight ahead.","روحي دغري لقدام.","\"Straight\" = دغري. \"Ahead\" = لقدام. أمر لإعطاء اتجاهات."],
+["Turn right at the light.","لفي يمين عند الإشارة.","\"Turn right\" = لفي يمين. \"Turn left\" = لفي شمال. \"Light\" = إشارة ضوئية."],
+["Turn left after the bridge.","لفي شمال بعد الجسر.","\"After\" = بعد. \"Bridge\" = جسر. \"Before\" = قبل."],
+["It is on the left side.","هو عالشمال.","\"On the left\" = عالشمال. \"On the right\" = عاليمين."],
+["The school is near the park.","المدرسة قريبة من الحديقة.","\"Near\" = قريب من. \"Far from\" = بعيد عن."],
+["How far is the airport?","قديش بعيد المطار؟","\"How far\" = قديش بعيد. بنسأل عن المسافة."],
+["It takes thirty minutes by car.","بياخد نص ساعة بالسيارة.","\"It takes\" = بياخد. \"By car\" = بالسيارة. \"By bus\" = بالباص."],
+["I need to take the bus.","لازم آخد الباص.","\"Take the bus\" = آخد الباص. \"Take a taxi\" = آخد تكسي."],
+["Where is the bus stop?","وين محطة الباص؟","\"Bus stop\" = محطة الباص."],
+["I want to call a taxi.","بدي أطلب تكسي.","\"Call a taxi\" = أطلب تكسي. هلق أكتر شي بنستعمل Uber."],
+["Can you drive me to the store?","فيك توصلني عالدكانة؟","\"Drive me\" = وصلني بالسيارة. \"Can you...?\" = فيك...؟"],
+["I am lost. Can you help me?","أنا ضايعة. فيك تساعدني؟","\"Lost\" = ضايع. \"Help\" = ساعد. جملة مهمة لما تضيعي."],
+["The gas station is on the corner.","محطة البنزين عالزاوية.","\"On the corner\" = عالزاوية. \"Gas station\" = محطة بنزين."],
+["I need to fill up the car.","لازم أعبي السيارة بنزين.","\"Fill up\" = عبّي. \"Gas\" = بنزين (بأمريكا)."],
+["Where can I park?","وين فيني أصف السيارة؟","\"Park\" = صف السيارة. \"Parking\" = موقف."],
+["The traffic is very bad today.","السير كتير زحمة اليوم.","\"Traffic\" = سير/زحمة. \"Bad\" = سيء."],
+["I take my children to school by car.","بوصل ولادي عالمدرسة بالسيارة.","\"Take someone to\" = وصّل حدا لـ. \"By car\" = بالسيارة."],
+["The train leaves at nine.","القطار بطلع الساعة تسعة.","\"Leaves\" = بطلع/بيمشي. \"Train\" = قطار."],
+["I have a driver's license.","عندي رخصة سواقة.","\"Driver's license\" = رخصة سواقة. الـ 's بتدل على الملكية."],
+["We need to cross the street.","لازم نقطع الشارع.","\"Cross\" = اقطع. \"Street\" = شارع. \"Road\" = طريق."],
+["Be careful when you cross.","انتبهي لما تقطعي الشارع.","\"Be careful\" = انتبهي. \"When\" = لما."],
+["The supermarket is two blocks away.","السوبرماركت على بعد شارعين.","\"Blocks\" = شوارع/بلوكات. وحدة مسافة بأمريكا."],
+["I walk to the park every morning.","بمشي عالحديقة كل صبح.","\"Walk\" = بمشي. \"Walk to\" = بمشي لـ."],
+["Can you show me on the map?","فيك تفرجيني عالخريطة؟","\"Show\" = فرجي. \"Map\" = خريطة."],
+["I am going downtown.","رايحة عوسط البلد.","\"Downtown\" = وسط البلد. \"Going\" = رايحة."],
+["Where is the nearest gas station?","وين أقرب محطة بنزين؟","\"Nearest\" = أقرب. تذكري: near → nearer → nearest."],
+["The highway is faster.","الأوتوستراد أسرع.","\"Faster\" = أسرع. \"Fast\" → \"faster\". بنضيف er للمقارنة."],
+["Please drop me off here.","من فضلك نزلني هون.","\"Drop off\" = نزّل. \"Here\" = هون. \"There\" = هنيك."],
+["I need directions to the library.","بدي توجيهات للمكتبة.","\"Directions\" = توجيهات. \"Library\" = مكتبة."],
+["It is across from the mosque.","هو مقابل الجامع.","\"Across from\" = مقابل. \"Between\" = بين."],
+// === Month 8: الصحة والجسم (31) ===
+["I don't feel well.","ما حاسة حالي منيحة.","\"Feel\" = حاسة. \"Well\" = منيح (مع الصحة)."],
+["I have a headache.","راسي بوجعني.","\"Headache\" = وجع راس. \"I have a\" + مرض/عرض."],
+["My stomach hurts.","بطني بتوجعني.","\"Hurts\" = بوجع. \"My + جزء الجسم + hurts\" = بوجعني."],
+["I need to see a doctor.","لازم أروح عالدكتور.","\"See a doctor\" = أروح عالدكتور. تعبير جاهز."],
+["I have an appointment at three.","عندي موعد الساعة تلاتة.","\"Appointment\" = موعد. بنقول: have an appointment."],
+["I have a fever.","عندي حرارة.","\"Fever\" = حرارة. \"I have a fever\" = عندي حرارة."],
+["I have a cold.","أنا مرشحة.","\"Cold\" = رشح. \"I have a cold\" = أنا مرشحة."],
+["Take this medicine twice a day.","خدي هالدوا مرتين باليوم.","\"Medicine\" = دوا. \"Twice\" = مرتين. \"Once\" = مرة. \"Three times\" = تلت مرات."],
+["I am allergic to nuts.","عندي حساسية من المكسرات.","\"Allergic to\" = عندي حساسية من. مهم تعرفي تقوليها."],
+["Where is the pharmacy?","وين الصيدلية؟","\"Pharmacy\" أو \"drugstore\" = صيدلية."],
+["I need pain medicine.","بدي دوا للوجع.","\"Pain\" = وجع/ألم. \"Pain medicine\" = مسكّن."],
+["My throat hurts.","زلقومي بيوجعني.","\"Throat\" = زلقوم/حلق. \"My throat hurts\" = زلقومي بوجعني."],
+["I have a cough.","عندي سعلة.","\"Cough\" = سعلة. بتنلفظ \"كوف\"."],
+["I need to rest.","لازم أرتاح.","\"Rest\" = ارتاح. \"Need to rest\" = لازم أرتاح."],
+["Drink a lot of water.","اشربي مي كتير.","\"A lot of\" = كتير. \"Drink\" = اشربي. أمر."],
+["Wash your hands often.","اغسلي إيديكي كتير.","\"Often\" = كتير/غالباً. \"Wash\" = اغسلي."],
+["My back hurts.","ضهري بيوجعني.","\"Back\" = ضهر. أجزاء الجسم: head راس، arm إيد، leg إجر."],
+["I need to go to the emergency room.","لازم أروح عالطوارئ.","\"Emergency room\" أو \"ER\" = طوارئ. مهم تعرفي هالكلمة."],
+["The doctor said I need rest.","الدكتور قال لازم أرتاح.","\"Said\" = قال. ماضي \"say\". \"The doctor said\" = الدكتور قال."],
+["I take vitamins every day.","باخد فيتامينات كل يوم.","\"Take\" مع الدوا = باخد. \"Vitamins\" = فيتامينات."],
+["My child has a fever.","ابني عنده حرارة.","\"Has\" بدل \"have\" مع he/she/it. \"My child has\" = ابني عنده."],
+["I need to make an appointment.","لازم أحجز موعد.","\"Make an appointment\" = احجز موعد. تعبير جاهز."],
+["Can I see a female doctor?","ممكن أشوف دكتورة؟","\"Female\" = أنثى. \"Male\" = ذكر. \"Female doctor\" = دكتورة."],
+["I feel much better today.","حاسة حالي أحسن اليوم.","\"Much better\" = أحسن بكتير. \"Better\" = أحسن."],
+["Exercise is good for your health.","الرياضة منيحة لصحتك.","\"Exercise\" = رياضة. \"Health\" = صحة. \"Good for\" = منيح لـ."],
+["I walk for thirty minutes every day.","بمشي نص ساعة كل يوم.","\"For thirty minutes\" = لمدة نص ساعة. \"For\" = لمدة."],
+["I try to eat healthy food.","بحاول آكل أكل صحي.","\"Try to\" = بحاول. \"Healthy\" = صحي. \"Healthy food\" = أكل صحي."],
+["I need to sleep eight hours.","لازم أنام تمان ساعات.","\"Sleep\" = أنام. \"Hours\" = ساعات. \"Eight hours\" = تمان ساعات."],
+["Do you have health insurance?","عندك تأمين صحي؟","\"Health insurance\" = تأمين صحي. كلمة مهمة بأمريكا."],
+["I need to fill this prescription.","لازم أصرف هالوصفة.","\"Prescription\" = وصفة طبية. \"Fill a prescription\" = صرف الوصفة."],
+["The hospital is on Main Street.","المستشفى على الشارع الرئيسي.","\"Main Street\" = الشارع الرئيسي. \"On\" + شارع: on Main Street."],
+// === Month 9: الشغل والمدرسة (30) ===
+["What do you do for work?","شو بتشتغلي؟","\"What do you do?\" = شو بتشتغلي. سؤال عن الشغل."],
+["I am a teacher.","أنا معلمة.","\"I am a\" + مهنة. مهن: teacher معلم، doctor دكتور، nurse ممرضة."],
+["My husband works in an office.","زوجي بشتغل بمكتب.","\"Office\" = مكتب. \"Works in\" = بشتغل بـ."],
+["I am looking for a job.","عم بدور على شغل.","\"Looking for\" = عم بدور على. \"Job\" = شغل/وظيفة."],
+["I have a job interview tomorrow.","عندي مقابلة شغل بكرا.","\"Interview\" = مقابلة. \"Job interview\" = مقابلة شغل."],
+["What time do you start work?","أي ساعة بتبلشي شغل؟","\"Start\" = ببلش. \"Finish\" = بخلص."],
+["I work from nine to five.","بشتغل من التسعة للخمسة.","\"From...to...\" = من...لـ... بنقول ساعات الشغل هيك."],
+["He is a doctor.","هو دكتور.","مهن أكتر: engineer مهندس، lawyer محامي، accountant محاسب."],
+["She is a nurse.","هي ممرضة.","\"Nurse\" = ممرض/ة. بالإنجليزي نفس الكلمة للذكر والأنثى."],
+["I want to study English more.","بدي أدرس إنجليزي أكتر.","\"Study\" = أدرس. \"More\" = أكتر."],
+["My children go to public school.","ولادي بروحوا عمدرسة حكومية.","\"Public school\" = مدرسة حكومية. \"Private school\" = مدرسة خاصة."],
+["The teacher is very nice.","المعلمة كتير لطيفة.","\"Nice\" = لطيف. \"Teacher\" = معلم/ة."],
+["I have a parent-teacher meeting.","عندي اجتماع مع المعلمة.","\"Parent-teacher meeting\" = اجتماع أهل ومعلمين."],
+["My daughter got a good grade.","بنتي جابت علامة منيحة.","\"Got\" = جابت. ماضي \"get\". \"Grade\" = علامة."],
+["I need to sign this form.","لازم أوقع هالورقة.","\"Sign\" = وقّع. \"Form\" = نموذج/ورقة رسمية."],
+["Can you help me fill out this application?","فيك تساعدني أعبي هالطلب؟","\"Fill out\" = عبّي. \"Application\" = طلب/استمارة."],
+["I can use a computer.","بعرف أستعمل الكمبيوتر.","\"Can\" = بقدر/بعرف. \"Use\" = أستعمل."],
+["I want to take English classes.","بدي آخد صفوف إنجليزي.","\"Take classes\" = آخد صفوف. تعبير جاهز."],
+["My boss is very understanding.","مديري كتير متفهم.","\"Boss\" = مدير. \"Understanding\" = متفهم."],
+["I work part-time.","بشتغل نص دوام.","\"Part-time\" = نص دوام. \"Full-time\" = دوام كامل."],
+["I have two days off per week.","عندي يومين عطلة بالأسبوع.","\"Days off\" = أيام عطلة. \"Per week\" = بالأسبوع."],
+["The school bus comes at seven thirty.","باص المدرسة بيجي الساعة سبعة ونص.","\"Comes\" = بيجي. \"School bus\" = باص المدرسة."],
+["My son needs help with math.","ابني بده مساعدة بالرياضيات.","\"Needs help with\" = بده مساعدة بـ. \"Math\" = رياضيات."],
+["I want to learn new skills.","بدي أتعلم مهارات جديدة.","\"Learn\" = أتعلم. \"Skills\" = مهارات. \"New\" = جديدة."],
+["She graduated from college.","هي تخرجت من الجامعة.","\"Graduated\" = تخرجت. \"College\" أو \"university\" = جامعة."],
+["I am studying for my test.","عم بدرس لامتحاني.","\"Studying for\" = عم بدرس لـ. \"Test\" أو \"exam\" = امتحان."],
+["Practice makes perfect.","الممارسة بتعمل الكمال.","مثل إنجليزي مشهور. معناه: التمرين بيوصلك للإتقان."],
+["I need a day off.","بدي يوم عطلة.","\"Day off\" = يوم عطلة. \"Take a day off\" = آخد يوم عطلة."],
+["We have a meeting at two.","عنا اجتماع الساعة اثنين.","\"Meeting\" = اجتماع. \"Have a meeting\" = عنا اجتماع."],
+["I finished my work early today.","خلصت شغلي بكير اليوم.","\"Finished\" = خلصت. ماضي \"finish\". \"Early\" = بكير."],
+// === Month 10: الطقس والطبيعة (31) ===
+["It is sunny today.","اليوم الشمس طالعة.","\"Sunny\" = مشمس. \"It is\" + صفة الطقس. هيك بنوصف الجو."],
+["It is raining outside.","عم بتشتي برا.","\"Raining\" = عم تشتي. \"It is raining\" = عم بتشتي."],
+["It is very cold today.","اليوم كتير برد.","\"Cold\" = بارد. \"Hot\" = حار. \"Warm\" = دافي."],
+["It is very hot in the summer.","كتير حر بالصيف.","\"In the summer\" = بالصيف. الفصول مع \"in\"."],
+["I need to wear a jacket.","لازم ألبس جاكيت.","\"Wear\" = ألبس. \"Jacket\" = جاكيت. \"Coat\" = معطف."],
+["The snow is beautiful.","الثلج حلو.","\"Snow\" = ثلج. \"Snowing\" = عم تثلج."],
+["Do I need an umbrella?","بدي شمسية؟","\"Umbrella\" = شمسية. \"Do I need...?\" = بدي...؟"],
+["The wind is strong today.","الهوا قوي اليوم.","\"Wind\" = هوا. \"Strong\" = قوي. \"Windy\" = في هوا."],
+["Spring is my favorite season.","الربيع أحلى فصل عندي.","\"Favorite\" = المفضل. \"My favorite\" = أحلى شي عندي."],
+["The flowers are blooming.","الزهور عم بتفتح.","\"Flowers\" = زهور. \"Blooming\" = عم بتفتح. جملة حلوة عن الربيع."],
+["The leaves are changing color.","ورق الشجر عم يتغير لونه.","\"Leaves\" = ورق الشجر. \"Changing\" = عم يتغير."],
+["It gets dark early in winter.","بعتم بكير بالشتي.","\"Gets dark\" = بعتم. \"Early\" = بكير. \"In winter\" = بالشتي."],
+["I love the fall weather.","بحب جو الخريف.","\"Fall\" أو \"autumn\" = خريف. \"Weather\" = جو/طقس."],
+["We went to the beach last summer.","رحنا عالبحر الصيف الماضي.","\"Went\" = رحنا. ماضي \"go\". \"Last summer\" = الصيف الماضي."],
+["The mountains are very beautiful.","الجبال كتير حلوين.","\"Mountains\" = جبال. \"Mountain\" = جبل."],
+["I like to sit in the garden.","بحب أقعد بالحديقة.","\"Sit\" = أقعد. \"Stand\" = أوقف."],
+["We planted flowers in the garden.","زرعنا ورود بالحديقة.","\"Planted\" = زرعنا. ماضي \"plant\". \"Flowers\" = ورود."],
+["The birds are singing.","العصافير عم تغني.","\"Birds\" = عصافير. \"Singing\" = عم تغني."],
+["I saw a rainbow today.","شفت قوس قزح اليوم.","\"Saw\" = شفت. ماضي \"see\". \"Rainbow\" = قوس قزح."],
+["The sky is very clear tonight.","السما صافية الليلة.","\"Sky\" = سما. \"Clear\" = صافي. \"Tonight\" = الليلة."],
+["We like to go camping.","بنحب نروح كامبينغ.","\"Camping\" = تخييم. \"Go camping\" = نروح كامبينغ."],
+["The park has a big lake.","الحديقة فيها بحيرة كبيرة.","\"Lake\" = بحيرة. \"River\" = نهر. \"Ocean\" = محيط."],
+["It is cloudy but not raining.","غيم بس مش عم تشتي.","\"Cloudy\" = غيم. \"But\" = بس. \"But\" بتربط جملتين متعاكسات."],
+["I need sunscreen.","بدي كريم شمس.","\"Sunscreen\" = كريم شمس/واقي شمس. مهم بالصيف."],
+["The temperature is thirty degrees.","الحرارة تلاتين درجة.","\"Temperature\" = حرارة. \"Degrees\" = درجات."],
+["We are having a picnic tomorrow.","رح نعمل نزهة بكرا.","\"Picnic\" = نزهة. \"Are having\" = رح نعمل (مستقبل قريب)."],
+["I like walking in nature.","بحب المشي بالطبيعة.","\"Walking\" = المشي. \"Nature\" = طبيعة."],
+["Be careful of the ice on the road.","انتبهي من الجليد عالطريق.","\"Ice\" = جليد. \"Be careful of\" = انتبهي من."],
+["The sunset is very beautiful today.","غروب الشمس كتير حلو اليوم.","\"Sunset\" = غروب. \"Sunrise\" = شروق."],
+["I can hear the thunder.","بسمع الرعد.","\"Thunder\" = رعد. \"Lightning\" = برق. \"Hear\" = بسمع."],
+["The weather will be nice this weekend.","الجو رح يكون حلو هالويكند.","\"Will be\" = رح يكون. \"Will\" + فعل = المستقبل."],
+// === Month 11: المشاعر والآراء (30) ===
+["I am very happy today.","أنا كتير مبسوطة اليوم.","\"Happy\" = مبسوط/سعيد. \"Sad\" = حزين. \"I am\" + شعور."],
+["I feel tired.","حاسة حالي تعبانة.","\"Tired\" = تعبان. \"I feel\" = حاسة حالي. \"Feel\" + صفة."],
+["I am worried about my children.","أنا قلقانة على ولادي.","\"Worried about\" = قلقان على. \"About\" = على/عن."],
+["He is very angry.","هو كتير زعلان.","\"Angry\" = زعلان/معصّب. مشاعر: happy, sad, angry, scared."],
+["She is sad because she misses home.","هي حزينة لأنها مشتاقة لبلدها.","\"Because\" = لأنو. بتربط سبب بنتيجة. جملة + because + سبب."],
+["I am excited about the trip.","أنا متحمسة للرحلة.","\"Excited\" = متحمس. \"About\" = عن/لـ. \"Trip\" = رحلة."],
+["I am afraid of the dark.","بخاف من العتمة.","\"Afraid of\" = خايف من. \"Dark\" = عتمة."],
+["I am proud of my daughter.","أنا فخورة ببنتي.","\"Proud of\" = فخور بـ. \"Proud\" = فخور."],
+["I feel lonely sometimes.","بحس بالوحدة أحياناً.","\"Lonely\" = وحيد. \"Sometimes\" = أحياناً. \"Always\" = دايماً."],
+["I am grateful for my family.","ممتنة لعيلتي.","\"Grateful\" = ممتن. \"Grateful for\" = ممتن لـ."],
+["I think this is a good idea.","بفتكر هاي فكرة منيحة.","\"I think\" = بفتكر/باعتقد. بنقولها قبل ما نعطي رأينا."],
+["I agree with you.","موافقة معك.","\"Agree\" = موافق. \"I agree with you\" = موافقة معك."],
+["I don't agree.","مش موافقة.","\"Don't agree\" أو \"disagree\" = مش موافق."],
+["In my opinion, education is important.","برأيي التعليم مهم.","\"In my opinion\" = برأيي. طريقة تعطي رأيك بأدب."],
+["I prefer coffee over tea.","بفضل القهوة على الشاي.","\"Prefer\" = بفضل. \"Prefer A over B\" = بفضل أ على ب."],
+["I don't like cold weather.","ما بحب الجو البارد.","\"Don't like\" = ما بحب. مراجعة النفي."],
+["I hope everything goes well.","إن شاء الله كل شي يمشي منيح.","\"I hope\" = بتمنى. \"Everything\" = كل شي."],
+["I believe you can do it.","بآمن إنك فيكي تعمليها.","\"Believe\" = بآمن. \"Can do it\" = فيكي تعمليها."],
+["I am surprised by the news.","تفاجأت بالأخبار.","\"Surprised\" = متفاجئ. \"News\" = أخبار."],
+["I feel comfortable here.","حاسة حالي مرتاحة هون.","\"Comfortable\" = مرتاح. \"Uncomfortable\" = مش مرتاح."],
+["I am nervous about the test.","متوترة من الامتحان.","\"Nervous\" = متوتر. \"About\" = من/عن."],
+["He made me laugh.","ضحكني.","\"Made me laugh\" = ضحكني. \"Made\" ماضي \"make\". \"Laugh\" = ضحك."],
+["Don't be sad, everything will be fine.","لا تزعلي، كل شي رح يكون تمام.","\"Don't be\" + صفة = لا تكوني. \"Fine\" = تمام/منيح."],
+["I appreciate your help very much.","بقدر مساعدتك كتير.","\"Appreciate\" = بقدر. أقوى من \"thank you\"."],
+["I am bored. Let's do something.","زهقانة. يلا نعمل شي.","\"Bored\" = زهقان. \"Let's\" = يلا. \"Let's do\" = يلا نعمل."],
+["I feel safe in this neighborhood.","حاسة حالي بأمان بهالحي.","\"Safe\" = بأمان. \"Neighborhood\" = حي."],
+["I am confused. Can you explain?","أنا مش فاهمة. فيك تشرحلي؟","\"Confused\" = مش فاهم. \"Explain\" = اشرح."],
+["That movie was very interesting.","هداك الفيلم كان كتير حلو.","\"Interesting\" = مثير/حلو. \"Movie\" = فيلم. \"Was\" = كان."],
+["I feel better when I exercise.","بحس حالي أحسن لما أتمرن.","\"When\" = لما. \"Exercise\" = أتمرن. جملة مع شرط."],
+["Patience is very important.","الصبر كتير مهم.","\"Patience\" = صبر. \"Important\" = مهم. مثل عربي وإنجليزي."],
+// === Month 12: مراجعة ومحادثات (31) ===
+["Hello, my name is Sara. Nice to meet you.","مرحبا، اسمي سارة. تشرفنا.","مراجعة: تقديم نفسك. حاولي تقوليها بدون ما تطلعي عالترجمة."],
+["I am from Jordan and I live in America now.","أنا من الأردن وهلق ساكنة بأمريكا.","\"And\" = و. بنربط جملتين مع بعض. \"Now\" = هلق."],
+["I have two children, a boy and a girl.","عندي ولدين، صبي وبنت.","\"A boy and a girl\" = صبي وبنت. مراجعة العيلة."],
+["Can you tell me where the nearest store is?","فيك تقوليلي وين أقرب دكانة؟","سؤال مهذب: \"Can you tell me...?\" = فيك تقوليلي...؟"],
+["I would like to make an appointment with the doctor.","بدي أحجز موعد عند الدكتور.","\"With\" = مع/عند. مراجعة: حجز مواعيد."],
+["My son is not feeling well. He has a fever.","ابني مش منيح. عنده حرارة.","جملتين مرتبطات. الأولى بتوصف المشكلة، التانية بتوصف العرض."],
+["Excuse me, how much does this dress cost?","عن إذنك، قديش هالفستان؟","\"Excuse me\" + سؤال = طريقة مهذبة تسألي بالمحل."],
+["I am looking for a job. Do you have any openings?","عم بدور على شغل. عندكم شي فرصة؟","\"Openings\" = فرص عمل. \"Any\" = أي/شي."],
+["The weather is beautiful. Let's go to the park.","الجو حلو. يلا نروح عالحديقة.","\"Let's\" = يلا. مراجعة: اقتراح نشاط."],
+["I need help with my child's homework.","بدي مساعدة بوظيفة ابني.","\"Child's\" = تبع الولد. الـ 's بتدل على الملكية."],
+["Can I speak with the school principal?","ممكن أحكي مع مدير المدرسة؟","\"Principal\" = مدير المدرسة. \"Can I speak with\" = ممكن أحكي مع."],
+["I would like to pay my bill, please.","بدي أدفع حسابي، لو سمحت.","مراجعة: الدفع. \"Pay\" = ادفع. \"Bill\" = حساب/فاتورة."],
+["Where can I take English classes?","وين فيني آخد صفوف إنجليزي؟","\"Where can I...?\" = وين فيني...؟ سؤال مهم!"],
+["I am calling to schedule an appointment.","عم بتصل لأحجز موعد.","\"Calling to\" = عم بتصل لـ. \"Schedule\" = أحجز. هاي جملة بتستعمليها عالتلفون."],
+["My car is not working. I need a mechanic.","سيارتي مش شغالة. بدي ميكانيكي.","\"Is not working\" = مش شغال. \"Mechanic\" = ميكانيكي."],
+["Thank you for your help. I really appreciate it.","شكراً لمساعدتك. كتير بقدرها.","\"Thank you for\" = شكراً لـ. \"Really\" = فعلاً/كتير."],
+["I would like to open a bank account, please.","بدي أفتح حساب بالبنك، لو سمحت.","مراجعة: البنك. \"Open an account\" = افتح حساب."],
+["Can you please speak more slowly?","ممكن تحكي أبطأ لو سمحت؟","\"More slowly\" = أبطأ. مراجعة: طلب المساعدة."],
+["I need to register my child for school.","لازم أسجل ابني بالمدرسة.","\"Register\" = سجّل. \"Register for\" = سجّل بـ."],
+["How do I get to the post office from here?","كيف أوصل عالبريد من هون؟","\"How do I get to...?\" = كيف أوصل لـ...؟ \"Post office\" = البريد."],
+["I am learning English because I live in America.","عم بتعلم إنجليزي لأني ساكنة بأمريكا.","\"Because\" = لأنو. جملة بتحكي عن حالك وسبب تعلمك."],
+["My family in Jordan is doing well, thank God.","عيلتي بالأردن بخير، الحمد لله.","\"Thank God\" = الحمد لله. \"Doing well\" = بخير."],
+["I love living here but I miss my country.","بحب أعيش هون بس مشتاقة لبلدي.","\"But\" = بس. بتربط فكرتين متعاكسات."],
+["I want to become a citizen one day.","بدي أصير مواطنة يوم من الأيام.","\"Become\" = أصير. \"Citizen\" = مواطن. \"One day\" = يوم من الأيام."],
+["My English is getting better every day.","إنجليزيتي عم بتتحسن كل يوم.","\"Getting better\" = عم بتتحسن. \"Every day\" = كل يوم. أنتِ عم تتحسني!"],
+["I can now read and speak a little English.","هلق بقدر أقرأ وأحكي شوية إنجليزي.","\"Can\" = بقدر. \"A little\" = شوية. \"Read\" = أقرأ. \"Speak\" = أحكي."],
+["I am not afraid to make mistakes.","مش خايفة أغلط.","\"Make mistakes\" = أغلط. الغلط أحسن طريقة للتعلم!"],
+["Every day I learn something new.","كل يوم بتعلم شي جديد.","\"Something new\" = شي جديد. \"Learn\" = بتعلم."],
+["I am proud of how far I have come.","أنا فخورة بقديش تقدمت.","\"How far I have come\" = قديش تقدمت. إنتِ فعلاً تقدمتي كتير!"],
+["Thank you for helping me learn English.","شكراً إنك ساعدتني أتعلم إنجليزي.","\"For helping\" = لأنك ساعدت. \"Help\" = ساعد."],
+["I can do anything I put my mind to.","بقدر أعمل أي شي بقرر أعمله.","\"I can do anything\" = بقدر أعمل أي شي. آخر درس - مبروك! أنتِ قادرة على كل شي!"]
+];
+
+// State
+let st={m:0,l:0};
+const prog=JSON.parse(localStorage.getItem('ec-prog')||'{}');
+const started=localStorage.getItem('ec-started');
+
+function saveProg(){localStorage.setItem('ec-prog',JSON.stringify(prog))}
+function getGlobalIdx(m,l){let idx=0;for(let i=0;i<m;i++)idx+=MS[i].c;return idx+l}
+function getMonthLesson(gi){let m=0,idx=gi;while(m<MS.length&&idx>=MS[m].c){idx-=MS[m].c;m++}return{m,l:idx}}
+function completedInMonth(m){let s=getGlobalIdx(m,0),c=0;for(let i=0;i<MS[m].c;i++)if(prog[s+i])c++;return c}
+function totalCompleted(){let c=0;for(let k in prog)if(prog[k])c++;return c}
+
+function speak(text,rate){
+speechSynthesis.cancel();
+const u=new SpeechSynthesisUtterance(text);
+u.lang='en-US';u.rate=rate||0.75;
+speechSynthesis.speak(u);
+}
+
+function exportProgress(){
+const data={p:prog,s:started?'1':'0',v:1};
+return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+}
+
+function importProgress(code){
+try{
+const json=decodeURIComponent(escape(atob(code.trim())));
+const data=JSON.parse(json);
+if(!data.p)throw new Error('bad');
+Object.keys(prog).forEach(k=>delete prog[k]);
+Object.assign(prog,data.p);
+saveProg();
+if(data.s==='1')localStorage.setItem('ec-started','1');
+return true;
+}catch(e){return false;}
+}
+
+function showBackupPanel(){
+const bp=document.getElementById('backup-panel');
+if(bp)bp.classList.toggle('show');
+}
+
+function doExport(){
+const code=exportProgress();
+document.getElementById('bp-code').value=code;
+document.getElementById('bp-msg').className='bp-msg ok';
+document.getElementById('bp-msg').textContent='تم! انسخي هالكود واحتفظي فيه.';
+}
+
+function doCopy(){
+const ta=document.getElementById('bp-code');
+ta.select();
+navigator.clipboard.writeText(ta.value).then(()=>{
+document.getElementById('bp-msg').className='bp-msg ok';
+document.getElementById('bp-msg').textContent='تم النسخ!';
+});
+}
+
+function doImport(){
+const code=document.getElementById('bp-code').value;
+if(!code.trim()){
+document.getElementById('bp-msg').className='bp-msg err';
+document.getElementById('bp-msg').textContent='الصقي كود النسخة الاحتياطية أولاً.';
+return;
+}
+if(importProgress(code)){
+document.getElementById('bp-msg').className='bp-msg ok';
+document.getElementById('bp-msg').textContent='تم استرجاع التقدم! رح يتحدث الصفحة...';
+setTimeout(()=>location.reload(),1000);
+}else{
+document.getElementById('bp-msg').className='bp-msg err';
+document.getElementById('bp-msg').textContent='الكود مش صحيح. تأكدي إنك نسختيه كامل.';
+}
+}
+
+function render(){
+const app=document.getElementById('app');
+if(!started){
+app.innerHTML=`
+<header>
+<h1>تعلمي الإنجليزي</h1>
+<p>كورس سنة كاملة - ٣٦٥ درس</p>
+</header>
+<div class="welcome">
+<h2>أهلاً وسهلاً!</h2>
+<p>هاد كورس إنجليزي كامل - ٣٦٥ درس لمدة سنة.</p>
+<p>كل يوم في درس جديد فيه جملة إنجليزية مع الترجمة بالعربي ونصيحة قواعد.</p>
+<p>بتقدري تسمعي الجملة، تشوفي الترجمة، وتتعلمي كلمات جديدة كل يوم.</p>
+<p style="margin-top:24px"><strong>الشهور:</strong></p>
+<p style="font-size:0.9rem;line-height:2">
+١. التحيات والأساسيات<br>
+٢. العيلة والناس<br>
+٣. الأرقام والوقت<br>
+٤. الأكل والشرب<br>
+٥. التسوق والمصاري<br>
+٦. البيت والروتين<br>
+٧. الاتجاهات والمواصلات<br>
+٨. الصحة والجسم<br>
+٩. الشغل والمدرسة<br>
+١٠. الطقس والطبيعة<br>
+١١. المشاعر والآراء<br>
+١٢. مراجعة ومحادثات
+</p>
+<button class="start-btn" onclick="localStorage.setItem('ec-started','1');render()">يلا نبلش!</button>
+</div>`;
+return;
+}
+renderLesson();
+}
+
+function renderLesson(){
+const app=document.getElementById('app');
+const gi=getGlobalIdx(st.m,st.l);
+const lesson=L[gi];
+const done=prog[gi];
+const tc=totalCompleted();
+const pct=Math.round(tc/365*100);
+
+let monthTabs='';
+for(let i=0;i<MS.length;i++){
+const mc=completedInMonth(i);
+const full=mc===MS[i].c;
+monthTabs+=`<div class="month-tab${i===st.m?' active':''}" onclick="st.m=${i};st.l=0;renderLesson()">
+${full?'<span class="check">&#10003;</span>':''}${i+1}. ${MS[i].n}</div>`;
+}
+
+let dots='';
+for(let i=0;i<MS[st.m].c;i++){
+const dgi=getGlobalIdx(st.m,i);
+const cls=i===st.l?'current':(prog[dgi]?'done':'');
+dots+=`<div class="dot ${cls}" onclick="st.l=${i};renderLesson()"></div>`;
+}
+
+app.innerHTML=`
+<header>
+<button class="gear-btn" onclick="showBackupPanel()">&#9881;</button>
+<h1>تعلمي الإنجليزي</h1>
+<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+<div class="progress-text">${tc} من ٣٦٥ درس (${pct}%)</div>
+</header>
+<div id="backup-panel" class="backup-panel">
+<h3>&#128190; نسخة احتياطية</h3>
+<p>احفظي تقدمك حتى ما يضيع! اضغطي "حفظ" وانسخي الكود. لما بدك ترجعي التقدم، الصقي الكود واضغطي "استرجاع".</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+<button class="bp-btn" onclick="doExport()">&#128190; حفظ التقدم</button>
+<button class="bp-btn" onclick="doCopy()">&#128203; نسخ الكود</button>
+<button class="bp-btn restore" onclick="doImport()">&#128260; استرجاع</button>
+<button class="bp-btn close" onclick="showBackupPanel()">&#10005; إغلاق</button>
+</div>
+<textarea id="bp-code" placeholder="كود النسخة الاحتياطية بيطلع هون..."></textarea>
+<div id="bp-msg" class="bp-msg"></div>
+</div>
+<div class="months">${monthTabs}</div>
+<div class="month-title">${MS[st.m].e} - ${MS[st.m].n}</div>
+<div class="lesson-nav">
+<span>درس ${st.l+1} من ${MS[st.m].c}</span>
+<div class="lesson-dots">${dots}</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="day-num">اليوم ${gi+1} من ٣٦٥</span>
+${done?'<span style="color:#16a34a;font-size:0.85rem">&#10003; تم</span>':''}
+</div>
+<div class="card-body">
+<div class="english-sentence" onclick="speak('${lesson[0].replace(/'/g,"\\'")}')">
+${lesson[0]}
+</div>
+<div class="controls">
+<button class="btn btn-listen" onclick="speak('${lesson[0].replace(/'/g,"\\'")}')">
+&#9654; اسمعيها
+</button>
+<button class="btn btn-listen" onclick="speak('${lesson[0].replace(/'/g,"\\'")}',0.5)">
+&#128034; ببطء
+</button>
+<button class="btn btn-translate" onclick="document.getElementById('tr').classList.toggle('show')">
+&#127760; الترجمة
+</button>
+<button class="btn btn-tip" onclick="document.getElementById('tp').classList.toggle('show')">
+&#128161; نصيحة
+</button>
+<button class="btn btn-words" onclick="showWords()">
+&#128220; كلمة كلمة
+</button>
+</div>
+<div id="word-area"></div>
+<div id="tr" class="translation">${lesson[1]}</div>
+<div id="tp" class="tip">${lesson[2]}</div>
+<button class="btn btn-complete${done?' done':''}" onclick="markDone(${gi})">
+${done?'&#10003; تم هالدرس - اضغطي للإلغاء':'&#10003; خلصت هالدرس'}
+</button>
+</div>
+</div>
+<div class="bottom-nav">
+<button class="nav-btn" ${gi>=364?'disabled':''}
+onclick="goNext()">الدرس الجاي &#8592;</button>
+<span class="lesson-count">${gi+1}/365</span>
+<button class="nav-btn" ${gi<=0?'disabled':''}
+onclick="goPrev()">&#8594; الدرس السابق</button>
+</div>`;
+
+// scroll month tab into view
+setTimeout(()=>{
+const active=document.querySelector('.month-tab.active');
+if(active)active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+},100);
+}
+
+function showWords(){
+const gi=getGlobalIdx(st.m,st.l);
+const words=L[gi][0].replace(/[.,!?;:'"]/g,'').split(' ');
+const area=document.getElementById('word-area');
+if(area.innerHTML){area.innerHTML='';return;}
+area.innerHTML='<div class="word-mode">'+words.map(w=>
+`<button class="word-btn" onclick="speak('${w.replace(/'/g,"\\'")}',0.6)">${w}</button>`
+).join('')+'</div>';
+}
+
+function markDone(gi){
+if(prog[gi])delete prog[gi];
+else prog[gi]=true;
+saveProg();
+renderLesson();
+}
+
+function goNext(){
+const gi=getGlobalIdx(st.m,st.l);
+if(gi>=364)return;
+const nl=getMonthLesson(gi+1);
+st.m=nl.m;st.l=nl.l;
+renderLesson();
+window.scrollTo(0,0);
+}
+
+function goPrev(){
+const gi=getGlobalIdx(st.m,st.l);
+if(gi<=0)return;
+const nl=getMonthLesson(gi-1);
+st.m=nl.m;st.l=nl.l;
+renderLesson();
+window.scrollTo(0,0);
+}
+
+// Resume from last position
+const lastDone=Object.keys(prog).map(Number).sort((a,b)=>b-a)[0];
+if(lastDone!==undefined&&lastDone<364){
+const next=getMonthLesson(lastDone+1);
+st.m=next.m;st.l=next.l;
+}
+
+render();
+</script>
+</body>
+</html>
