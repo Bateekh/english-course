@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>كورس الإنجليزي - المستوى الثاني</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','Arial',sans-serif;background:#f0f4f8;min-height:100vh;color:#1e293b}
+#app{max-width:500px;margin:0 auto;padding:0 0 80px 0}
+header{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;padding:20px;text-align:center;position:relative}
+header h1{font-size:1.4rem;margin-bottom:4px}
+header p{font-size:0.85rem;opacity:0.9}
+.progress-bar{background:rgba(255,255,255,0.2);height:8px;border-radius:4px;margin-top:12px;overflow:hidden}
+.progress-fill{background:#fbbf24;height:100%;border-radius:4px;transition:width 0.5s}
+.progress-text{font-size:0.75rem;margin-top:4px;opacity:0.8}
+.months{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #e2e8f0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.months::-webkit-scrollbar{display:none}
+.month-tab{flex-shrink:0;padding:12px 16px;font-size:0.8rem;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;color:#64748b;transition:all 0.2s}
+.month-tab.active{color:#7c3aed;border-bottom-color:#7c3aed;font-weight:bold}
+.month-tab .check{color:#16a34a;margin-right:4px}
+.lesson-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid #e2e8f0}
+.lesson-nav span{font-size:0.85rem;color:#64748b}
+.lesson-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:60%}
+.dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;cursor:pointer;transition:all 0.2s}
+.dot.done{background:#16a34a}
+.dot.current{background:#7c3aed;transform:scale(1.3)}
+.card{background:#fff;margin:16px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);overflow:hidden}
+.card-header{padding:16px 20px 8px;display:flex;justify-content:space-between;align-items:center}
+.day-num{font-size:0.8rem;color:#94a3b8}
+.card-body{padding:8px 20px 20px}
+.english-sentence{direction:ltr;text-align:left;font-size:1.4rem;line-height:1.6;color:#1e293b;padding:16px 0;font-weight:500;cursor:pointer;unicode-bidi:plaintext}
+.english-sentence:active{color:#7c3aed}
+.word-mode{direction:ltr;text-align:left;display:flex;flex-wrap:wrap;gap:8px;padding:16px 0}
+.word-btn{background:#f5f3ff;color:#6d28d9;border:1px solid #c4b5fd;border-radius:8px;padding:8px 14px;font-size:1.1rem;cursor:pointer;transition:all 0.15s}
+.word-btn:active{background:#6d28d9;color:#fff}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.btn{border:none;border-radius:10px;padding:10px 16px;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;font-family:inherit}
+.btn:active{transform:scale(0.96)}
+.btn-listen{background:#f5f3ff;color:#6d28d9}
+.btn-translate{background:#f0fdf4;color:#166534}
+.btn-tip{background:#fef3c7;color:#92400e}
+.btn-words{background:#fdf2f8;color:#9d174d}
+.btn-complete{background:#16a34a;color:#fff;width:100%;justify-content:center;padding:12px;margin-top:8px;font-size:0.95rem}
+.btn-complete.done{background:#e2e8f0;color:#64748b}
+.translation{direction:rtl;text-align:right;background:#f0fdf4;padding:14px;border-radius:10px;margin-top:12px;font-size:1.1rem;line-height:1.8;color:#166534;display:none}
+.translation.show{display:block}
+.tip{direction:rtl;text-align:right;background:#fef3c7;padding:14px;border-radius:10px;margin-top:8px;font-size:0.95rem;line-height:1.8;color:#92400e;display:none}
+.tip.show{display:block}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;padding:12px 20px;max-width:500px;margin:0 auto;z-index:10}
+.nav-btn{background:#7c3aed;color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:0.9rem;cursor:pointer;font-family:inherit}
+.nav-btn:disabled{background:#e2e8f0;color:#94a3b8}
+.nav-btn:active{background:#6d28d9}
+.lesson-count{display:flex;align-items:center;font-size:0.85rem;color:#64748b}
+.welcome{padding:30px 20px;text-align:center}
+.welcome h2{font-size:1.5rem;margin-bottom:16px;color:#7c3aed}
+.welcome p{font-size:1rem;line-height:1.8;color:#475569;margin-bottom:12px}
+.welcome .start-btn{background:#7c3aed;color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:1.1rem;cursor:pointer;margin-top:20px;font-family:inherit}
+.month-title{padding:12px 20px;font-size:0.85rem;color:#64748b;text-align:center;background:#f8fafc}
+.gear-btn{position:absolute;left:16px;top:20px;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:0.85}
+.backup-panel{background:#fff;margin:16px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:20px;display:none}
+.backup-panel.show{display:block}
+.backup-panel h3{font-size:1.1rem;margin-bottom:12px;color:#7c3aed}
+.backup-panel p{font-size:0.9rem;color:#475569;line-height:1.7;margin-bottom:12px}
+.backup-panel textarea{width:100%;height:80px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:0.85rem;font-family:monospace;direction:ltr;resize:none;margin-bottom:8px}
+.backup-panel .bp-btn{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:0.9rem;cursor:pointer;margin-left:8px;font-family:inherit}
+.backup-panel .bp-btn.restore{background:#16a34a}
+.backup-panel .bp-btn.close{background:#94a3b8}
+.bp-msg{font-size:0.85rem;margin-top:8px;padding:8px;border-radius:6px;display:none}
+.bp-msg.ok{display:block;background:#f0fdf4;color:#166534}
+.bp-msg.err{display:block;background:#fef2f2;color:#991b1b}
+.level-badge{display:inline-block;background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:12px;font-size:0.75rem;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const MS=[
+{n:"الحكي عن الماضي",e:"Talking About the Past",c:31},
+{n:"التخطيط والمستقبل",e:"Plans & Future",c:28},
+{n:"الطلبات والقدرات",e:"Requests & Abilities",c:31},
+{n:"عند الدكتور - متقدم",e:"At the Doctor - Advanced",c:30},
+{n:"المدرسة والتعليم",e:"School & Education",c:31},
+{n:"الطبخ والوصفات",e:"Cooking & Recipes",c:30},
+{n:"البنك والمعاملات",e:"Banking & Official Business",c:31},
+{n:"الحياة الاجتماعية",e:"Social Life & Friendships",c:31},
+{n:"التكنولوجيا والإنترنت",e:"Technology & Internet",c:30},
+{n:"السفر والإجازة",e:"Travel & Vacation",c:31},
+{n:"الثقافة الأمريكية",e:"American Culture & Holidays",c:30},
+{n:"محادثات متقدمة",e:"Fluent Conversations",c:31}
+];
+const L=[
+["I went to the grocery store yesterday.","رحت عالسوبرماركت مبارح.","\"Went\" ماضي \"go\". بالإنجليزي كل فعل إله شكل ماضي مختلف."],
+["We visited my parents last weekend.","زرنا أهلي نهاية الأسبوع الماضي.","\"Visited\" - بنضيف ed للأفعال المنتظمة: visit → visited."],
+["She cooked a delicious dinner last night.","طبخت عشا طيب مبارح بالليل.","\"Last night\" = مبارح بالليل. \"Last\" + وقت = الماضي."],
+["The children played in the park after school.","الولاد لعبوا بالحديقة بعد المدرسة.","\"Played\" = لعبوا. play → played. فعل منتظم."],
+["I called my mother this morning.","اتصلت بأمي هالصبح.","\"Called\" = اتصلت. \"This morning\" = هالصبح."],
+["He fixed the car by himself.","صلّح السيارة لحاله.","\"By himself\" = لحاله. By myself = لحالي. By herself = لحالها."],
+["We moved to this city three years ago.","انتقلنا لهالمدينة من تلات سنين.","\"Ago\" = من/قبل. Three years ago = من تلات سنين."],
+["I studied English for two hours yesterday.","درست إنجليزي ساعتين مبارح.","\"For two hours\" = لمدة ساعتين. \"For\" + مدة زمنية."],
+["The weather was very nice last week.","الجو كان كتير حلو الأسبوع الماضي.","\"Was\" = كان (ماضي is). \"Were\" = كانوا (ماضي are)."],
+["She bought a new dress for the party.","اشترت فستان جديد للحفلة.","\"Bought\" ماضي \"buy\". فعل غير منتظم."],
+["I forgot to buy milk from the store.","نسيت أشتري حليب من الدكانة.","\"Forgot\" ماضي \"forget\". \"Forgot to\" + فعل."],
+["We watched a movie together last night.","تفرجنا على فيلم سوا مبارح بالليل.","\"Watched\" = تفرجنا. watch → watched."],
+["He worked late every day last week.","اشتغل لوقت متأخر كل يوم الأسبوع الماضي.","\"Worked late\" = اشتغل لوقت متأخر."],
+["The kids finished their homework before dinner.","الولاد خلصوا وظايفهم قبل العشا.","\"Finished\" = خلصوا. \"Their\" = تبعهم."],
+["I cleaned the whole house yesterday.","نظفت البيت كله مبارح.","\"Whole\" = كله/كامل. \"The whole house\" = البيت كله."],
+["She drove the kids to school this morning.","وصّلت الولاد عالمدرسة هالصبح.","\"Drove\" ماضي \"drive\". فعل غير منتظم."],
+["We had a wonderful time at the park.","قضينا وقت حلو بالحديقة.","\"Had\" ماضي \"have\". \"Wonderful\" = رائع."],
+["I met my neighbor for the first time yesterday.","تعرفت على جارتي لأول مرة مبارح.","\"Met\" ماضي \"meet\"."],
+["The doctor told me to take more rest.","الدكتور قلي لازم أرتاح أكتر.","\"Told me to\" = قلي لازم. \"Told\" ماضي \"tell\"."],
+["They moved here from Jordan five years ago.","انتقلوا لهون من الأردن من خمس سنين.","\"Five years ago\" = من خمس سنين. الرقم + ago."],
+["I didn't go to work because I was sick.","ما رحت عالشغل لأني كنت مريضة.","\"Didn't\" + الفعل الأصلي = نفي بالماضي. مش didn't went."],
+["She didn't understand what he said.","ما فهمت شو قال.","بعد didn't الفعل بيرجع لشكله الأصلي."],
+["Did you go to the meeting yesterday?","رحتي عالاجتماع مبارح؟","\"Did you...?\" سؤال بالماضي. did + الفعل الأصلي."],
+["What did you eat for breakfast today?","شو أكلتي عالفطور اليوم؟","\"What did you...?\" = شو عملتي...؟"],
+["Where did you buy that beautiful bag?","من وين اشتريتي هالشنطة الحلوة؟","\"Where did you buy\" = من وين اشتريتي."],
+["When did you arrive in America?","إيمتى وصلتي عأمريكا؟","\"When\" = إيمتى. \"Arrive\" = وصل."],
+["How long did you live in Jordan?","قديش عشتي بالأردن؟","\"How long\" = قديش (للمدة)."],
+["I used to live near the ocean.","كنت أعيش قريبة من البحر.","\"Used to\" = كنت أعمل. عادة قديمة ما عاد بتعمليها."],
+["She used to walk to school every day.","كانت تمشي عالمدرسة كل يوم.","\"Used to\" + فعل = كانت تعمل شي بالماضي بس هلق لا."],
+["We used to celebrate Eid with the whole family.","كنا نعيّد مع كل العيلة.","\"Used to celebrate\" = كنا نحتفل. ذكريات حلوة."],
+["Life was very different when I was young.","الحياة كانت كتير مختلفة لما كنت صغيرة.","\"When I was young\" = لما كنت صغيرة. \"Different\" = مختلف."],
+["I am going to cook mansaf this weekend.","رح أطبخ منسف هالويكند.","\"I am going to\" = رح. للخطط المقررة."],
+["We will visit my sister next month.","رح نزور أختي الشهر الجاي.","\"Will\" = رح. للمستقبل. \"Next month\" = الشهر الجاي."],
+["She is going to start English classes soon.","رح تبلش صفوف إنجليزي قريباً.","\"Soon\" = قريباً. \"Is going to\" = رح (هي)."],
+["The children will have a school break in June.","الولاد رح يكون عندهم عطلة بحزيران.","\"School break\" = عطلة مدرسة."],
+["I am planning to look for a new job.","ناوية أدور على شغل جديد.","\"Planning to\" = ناوية. \"Look for\" = أدور على."],
+["We are going to buy a new car next year.","رح نشتري سيارة جديدة السنة الجاية.","\"Next year\" = السنة الجاية."],
+["He will pick up the kids from school today.","رح يوخد الولاد من المدرسة اليوم.","\"Pick up\" = يوخد/يقلّ."],
+["I am going to make an appointment with the dentist.","رح أحجز موعد عند طبيب الأسنان.","\"Dentist\" = طبيب أسنان."],
+["They are going to move to a bigger house.","رح ينتقلوا لبيت أكبر.","\"Bigger\" = أكبر. big → bigger. المقارنة بنضيف er."],
+["The weather is going to be cold tomorrow.","الجو رح يكون بارد بكرا.","\"Is going to be\" = رح يكون."],
+["I will call you when I get home.","رح اتصل فيكي لما أوصل عالبيت.","بعد when ما بنستعمل will. \"When I get\" مش \"when I will get\"."],
+["We are going to have guests this weekend.","رح يجينا ضيوف هالويكند.","\"Guests\" = ضيوف. \"Have guests\" = يجينا ضيوف."],
+["She will finish her English course next year.","رح تخلص كورس الإنجليزي السنة الجاية.","\"Finish\" = تخلص. \"Will finish\" = رح تخلص."],
+["I am going to try a new recipe tonight.","رح أجرب وصفة جديدة الليلة.","\"Try\" = جرب. \"Recipe\" = وصفة."],
+["The school will start again in September.","المدرسة رح تبلش من جديد بأيلول.","\"Again\" = من جديد."],
+["I hope we will travel to Jordan this summer.","بتمنى نسافر عالأردن هالصيف.","\"I hope\" = بتمنى. \"Travel\" = سافر."],
+["I need to renew my driver's license next week.","لازم أجدد رخصة السواقة الأسبوع الجاي.","\"Renew\" = جدد. \"Driver's license\" = رخصة سواقة."],
+["We are thinking about getting a pet.","عم نفكر نجيب حيوان أليف.","\"Thinking about\" = عم نفكر. \"Pet\" = حيوان أليف."],
+["I am going to join a gym next month.","رح أسجل بنادي رياضة الشهر الجاي.","\"Join\" = انضم/سجّل. \"Gym\" = نادي رياضة."],
+["Do you want to come with us tomorrow?","بدك تيجي معنا بكرا؟","\"Come with us\" = تيجي معنا."],
+["What are you going to do this weekend?","شو رح تعملي هالويكند؟","سؤال عن خطط المستقبل."],
+["Where will you go for vacation this year?","وين رح تروحي بالإجازة هالسنة؟","\"Vacation\" = إجازة."],
+["When are you going to visit your family?","إيمتى رح تزوري عيلتك؟","\"When are you going to\" = إيمتى رح."],
+["I will help you with the cooking tonight.","رح ساعدك بالطبخ الليلة.","\"Help you with\" = ساعدك بـ."],
+["We should start saving money for the trip.","لازم نبلش نوفر مصاري للرحلة.","\"Should\" = لازم/المفروض. \"Save money\" = وفر مصاري."],
+["I am going to learn how to drive soon.","رح أتعلم أسوق قريباً.","\"Learn how to\" = أتعلم كيف."],
+["They will open a new store near our house.","رح يفتحوا دكانة جديدة قريبة من بيتنا.","\"Near our house\" = قريب من بيتنا."],
+["I promise I will study every day.","بوعدك رح أدرس كل يوم.","\"Promise\" = بوعد. \"I promise I will\" = بوعد رح."],
+["Could you please help me carry these bags?","ممكن تساعدني أشيل هالأكياس لو سمحت؟","\"Could you\" أكتر أدباً من \"Can you\"."],
+["Would you mind closing the window?","بتزعل إذا سكرت الشباك؟","\"Would you mind\" + verb+ing = بتزعل إذا. كتير مهذبة."],
+["May I use your phone for a minute?","ممكن أستعمل تلفونك لدقيقة؟","\"May I\" رسمية أكتر من \"Can I\"."],
+["Can you watch the children for an hour?","فيكي تطلعي على الولاد لساعة؟","\"Watch the children\" = تطلع على الولاد."],
+["I would like to speak with the manager, please.","بدي أحكي مع المدير، لو سمحت.","\"I would like to\" أحسن وأكتر أدب من \"I want\"."],
+["Could you tell me where the bathroom is?","ممكن تقوليلي وين الحمام؟","\"Could you tell me\" سؤال غير مباشر. مهذب أكتر."],
+["Would you like to come over for dinner?","بتحبي تيجي عندنا عالعشا؟","\"Come over\" = تيجي عندنا. دعوة غير رسمية."],
+["Can you explain that one more time?","فيكي تشرحيها كمان مرة؟","\"One more time\" = كمان مرة. \"Explain\" = اشرح."],
+["I would appreciate it if you could help me.","بقدّر إذا فيك تساعديني.","\"I would appreciate it if\" جملة رسمية ومهذبة جداً."],
+["Would you mind speaking a little more slowly?","ممكن تحكي أبطأ شوي لو سمحت؟","\"A little more slowly\" = أبطأ شوي."],
+["You should see a doctor about that cough.","لازم تروحي عالدكتور لهالسعلة.","\"Should\" = لازم. نصيحة."],
+["You shouldn't eat too much sugar.","ما لازم تاكلي سكر كتير.","\"Shouldn't\" = ما لازم. نصيحة سلبية."],
+["You had better leave early to avoid traffic.","أحسنلك تطلعي بكير حتى تتجنبي الزحمة.","\"Had better\" = أحسنلك. نصيحة قوية."],
+["You must wear a seatbelt in the car.","لازم تلبسي حزام الأمان بالسيارة.","\"Must\" = لازم (إجباري). أقوى من should."],
+["You don't have to come if you don't want to.","مش لازم تيجي إذا ما بدك.","\"Don't have to\" = مش لازم (اختياري). مختلفة عن must not."],
+["She might come to the party tomorrow.","يمكن تيجي عالحفلة بكرا.","\"Might\" = يمكن. احتمال."],
+["He could be at work right now.","يمكن يكون بالشغل هلق.","\"Could be\" = يمكن يكون. احتمال بالحاضر."],
+["It may rain later today, take an umbrella.","يمكن تشتي بعدين، خدي شمسية.","\"May\" = يمكن. للاحتمال."],
+["I can speak two languages fluently.","بحكي لغتين بطلاقة.","\"Fluently\" = بطلاقة."],
+["She can't drive yet, but she is learning.","لسا ما بتعرف تسوق، بس عم تتعلم.","\"Yet\" = لسا. \"Can't...yet\" = لسا ما بتقدر."],
+["They were able to find a good school nearby.","قدروا يلاقوا مدرسة منيحة قريبة.","\"Were able to\" = قدروا. ماضي can."],
+["I wasn't able to understand the letter they sent.","ما قدرت أفهم المكتوب اللي بعتوه.","\"Wasn't able to\" = ما قدرت."],
+["You are allowed to park here for two hours.","مسموحلك تصفي هون لساعتين.","\"Allowed to\" = مسموحلك."],
+["We are not supposed to use phones in class.","مش المفروض نستعمل التلفونات بالصف.","\"Not supposed to\" = مش المفروض."],
+["I managed to finish all the housework before noon.","قدرت أخلص كل شغل البيت قبل الضهر.","\"Managed to\" = قدرت (بعد جهد)."],
+["She is capable of doing anything she wants.","هي قادرة تعمل أي شي بدها ياه.","\"Capable of\" = قادر على."],
+["You need to fill out this form before you leave.","لازم تعبي هالنموذج قبل ما تطلعي.","\"Fill out\" = عبّي. \"Form\" = نموذج."],
+["I am supposed to pick up my son at three.","المفروض آخد ابني الساعة تلاتة.","\"Am supposed to\" = المفروض. التزام أو موعد."],
+["Everyone ought to treat others with respect.","كل واحد لازم يعامل غيره باحترام.","\"Ought to\" مثل should. \"Respect\" = احترام."],
+["I have been feeling dizzy for the past few days.","من كم يوم وأنا حاسة بدوخة.","\"Have been feeling\" = من فترة وأنا. الحاضر التام المستمر."],
+["My child has had a rash on his arm since yesterday.","ابني طلعله طفح على إيده من مبارح.","\"Rash\" = طفح جلدي. \"Since\" = من."],
+["I think I pulled a muscle in my back.","بفتكر شديت عضلة بضهري.","\"Pulled a muscle\" = شد عضلة. تعبير طبي مهم."],
+["The doctor said I need to take this medicine for a week.","الدكتور قال لازم آخد هالدوا لأسبوع.","\"For a week\" = لمدة أسبوع."],
+["I am here for my annual checkup.","أنا هون للفحص السنوي.","\"Annual checkup\" = فحص سنوي."],
+["I have been having trouble sleeping at night.","من فترة وعندي مشكلة بالنوم بالليل.","\"Trouble\" + verb+ing = مشكلة بـ."],
+["She twisted her ankle while she was walking.","لوت كاحلها وهي عم تمشي.","\"While\" = وهي/بينما. \"Twisted\" = لوت."],
+["I need to schedule a follow-up appointment.","لازم أحجز موعد متابعة.","\"Follow-up\" = متابعة."],
+["The nurse said my blood pressure is a little high.","الممرضة قالت ضغطي شوي عالي.","\"Blood pressure\" = ضغط الدم."],
+["I am allergic to penicillin and peanuts.","عندي حساسية من البنسلين والفستق.","\"Allergic to\" مهم تعرفي تقوليها للدكتور."],
+["How many times a day should I take this medicine?","كم مرة باليوم لازم آخد هالدوا؟","\"How many times a day\" = كم مرة باليوم."],
+["I need a referral to see a specialist.","بدي تحويلة لأروح عند أخصائي.","\"Referral\" = تحويلة. \"Specialist\" = أخصائي."],
+["My daughter needs her vaccinations updated.","بنتي لازم تحدّث مطاعيمها.","\"Vaccinations\" = مطاعيم/تطعيمات."],
+["I have a sharp pain in my lower back.","عندي وجع حاد بأسفل ضهري.","\"Sharp pain\" = وجع حاد. \"Lower back\" = أسفل الضهر."],
+["The doctor wants me to get some blood work done.","الدكتور بدو ياني أعمل فحص دم.","\"Blood work\" = فحص دم."],
+["I have been stressed and it is affecting my health.","من فترة وأنا متوترة وعم يأثر على صحتي.","\"Stressed\" = متوتر. \"Affecting\" = عم يأثر."],
+["She was in the hospital for three days after the surgery.","كانت بالمستشفى تلات أيام بعد العملية.","\"Surgery\" = عملية جراحية."],
+["I need to find a pediatrician for my children.","لازم ألاقي دكتور أطفال لولادي.","\"Pediatrician\" = دكتور أطفال. كلمة مهمة!"],
+["The pharmacy said my insurance doesn't cover this medicine.","الصيدلية قالت تأميني ما بيغطي هالدوا.","\"Cover\" = يغطي. \"Insurance doesn't cover\" = التأمين ما بيغطي."],
+["I should exercise more and eat less processed food.","لازم أتمرن أكتر وآكل أكل مصنّع أقل.","\"Processed food\" = أكل مصنّع. \"More\" أكتر. \"Less\" أقل."],
+["He has high cholesterol and needs to change his diet.","عنده كولسترول عالي ولازم يغير أكله.","\"Cholesterol\" = كولسترول. \"Diet\" = نظام أكل."],
+["I get headaches when I don't drink enough water.","بوجعني راسي لما ما أشرب مي كافي.","\"Enough\" = كافي. \"Get headaches\" = بوجعني راسي."],
+["The dentist said I need to get a cavity filled.","دكتور الأسنان قال لازم أعبي تسوسة.","\"Cavity\" = تسوسة. \"Get a cavity filled\" = أعبي تسوسة."],
+["I have an eye exam appointment next Tuesday.","عندي موعد فحص عيون الثلاثاء الجاي.","\"Eye exam\" = فحص عيون."],
+["She is pregnant and her due date is in October.","هي حامل وموعدها بتشرين الأول.","\"Pregnant\" = حامل. \"Due date\" = موعد الولادة."],
+["I need to refill my prescription before it runs out.","لازم أجدد الوصفة قبل ما تخلص.","\"Refill\" = جدد. \"Runs out\" = تخلص."],
+["Please let me know if there are any side effects.","خبريني إذا صار في أعراض جانبية.","\"Side effects\" = أعراض جانبية. \"Let me know\" = خبريني."],
+["I have been taking vitamins and I feel much better.","من فترة وأنا آخذ فيتامينات وحاسة حالي أحسن بكتير.","\"Much better\" = أحسن بكتير."],
+["Regular exercise helps reduce stress and anxiety.","الرياضة المنتظمة بتساعد تخفف التوتر والقلق.","\"Reduce\" = خفف. \"Anxiety\" = قلق."],
+["My son's report card shows he is doing well in math.","تقرير ابني بيبيّن إنو منيح بالرياضيات.","\"Report card\" = تقرير العلامات."],
+["The teacher said my daughter needs extra help with reading.","المعلمة قالت بنتي بدها مساعدة زيادة بالقراءة.","\"Extra help\" = مساعدة زيادة."],
+["There is a parent-teacher conference next Thursday.","في اجتماع أهل ومعلمين الخميس الجاي.","\"Conference\" = اجتماع/مؤتمر."],
+["I need to pack lunch for the kids every morning.","لازم أجهز غدا للولاد كل صبح.","\"Pack lunch\" = جهّز الغدا. تعبير يومي مهم."],
+["The school is organizing a field trip to the museum.","المدرسة عم تنظم رحلة للمتحف.","\"Field trip\" = رحلة مدرسية. \"Museum\" = متحف."],
+["My daughter made a new friend at school today.","بنتي عملت صاحبة جديدة بالمدرسة اليوم.","\"Made a friend\" = عمل صاحب."],
+["He has been having trouble focusing in class.","من فترة وعنده مشكلة بالتركيز بالصف.","\"Focusing\" = التركيز."],
+["I want to sign my son up for soccer practice.","بدي أسجل ابني بتمرين كرة قدم.","\"Sign up for\" = سجّل بـ."],
+["The school sent a letter about the new dress code.","المدرسة بعتت رسالة عن الزي الجديد.","\"Dress code\" = زي/لباس رسمي."],
+["Can you help me understand this homework assignment?","فيكي تساعديني أفهم هالوظيفة؟","\"Assignment\" = وظيفة/مهمة."],
+["My children ride the school bus every morning.","ولادي بيركبوا باص المدرسة كل صبح.","\"Ride\" = يركب."],
+["She received an award for perfect attendance.","أخذت جائزة على الحضور الكامل.","\"Award\" = جائزة. \"Perfect attendance\" = حضور كامل."],
+["The school is closed tomorrow because of a holiday.","المدرسة مسكرة بكرا بسبب عطلة.","\"Because of\" = بسبب."],
+["I need to volunteer at my son's school event.","لازم أتطوع بحفلة مدرسة ابني.","\"Volunteer\" = تطوع. \"Event\" = مناسبة."],
+["They are learning about science and history this semester.","عم يتعلموا عن العلوم والتاريخ هالفصل.","\"Semester\" = فصل دراسي."],
+["My daughter wants to join the school choir.","بنتي بدها تنضم لجوقة المدرسة.","\"Choir\" بتنلفظ \"كواير\". = جوقة."],
+["The principal called to discuss my son's behavior.","المدير اتصل ليحكي عن تصرفات ابني.","\"Principal\" = مدير المدرسة. \"Behavior\" = تصرفات."],
+["Education is the most important thing for my children.","التعليم أهم شي لولادي.","\"The most important\" = الأهم. صيغة التفضيل."],
+["She is in the fifth grade and loves her teacher.","هي بالصف الخامس وبتحب معلمتها.","\"Fifth grade\" = الصف الخامس."],
+["I try to read with my children every night.","بحاول أقرأ مع ولادي كل ليلة.","\"Try to\" = بحاول."],
+["He is improving his English thanks to his ESL class.","إنجليزيته عم تتحسن بفضل صف الـ ESL.","\"ESL\" = English as a Second Language. صف للأجانب."],
+["My son wants to be a doctor when he grows up.","ابني بده يصير دكتور لما يكبر.","\"When he grows up\" = لما يكبر."],
+["Parent involvement makes a big difference in education.","مشاركة الأهل بتعمل فرق كبير بالتعليم.","\"Makes a difference\" = بتعمل فرق."],
+["The school year ends in June and starts again in August.","السنة الدراسية بتخلص بحزيران وبتبلش بآب.","\"School year\" = سنة دراسية."],
+["We practice spelling words together every evening.","بنتمرن على تهجئة كلمات سوا كل مسا.","\"Spelling\" = تهجئة."],
+["The school playground was recently renovated.","ملعب المدرسة تجدد من فترة قريبة.","\"Playground\" = ملعب. \"Renovated\" = تجدد."],
+["First, chop the onions and garlic finely.","أول شي، قطعي البصل والثوم ناعم.","\"Chop\" = قطّع. \"Finely\" = ناعم."],
+["You need to preheat the oven to three hundred fifty degrees.","لازم تسخني الفرن على 350 درجة.","\"Preheat\" = سخّن مسبقاً. \"Oven\" = فرن."],
+["Stir the mixture until it becomes smooth.","حركي الخليط لحتى يصير ناعم.","\"Stir\" = حرّك. \"Until\" = لحتى."],
+["Add two cups of flour and one teaspoon of salt.","ضيفي كاستين طحين وملعقة صغيرة ملح.","\"Teaspoon\" = ملعقة صغيرة. \"Tablespoon\" = ملعقة كبيرة."],
+["Let the dough rise for about an hour.","خلي العجين يتخمر حوالي ساعة.","\"Dough\" = عجين. \"Rise\" = يتخمر."],
+["Fry the chicken on medium heat until it turns golden brown.","اقلي الدجاج على نار وسط لحتى يصير ذهبي.","\"Fry\" = اقلي. \"Medium heat\" = نار وسط."],
+["This recipe has been in my family for generations.","هالوصفة بعيلتنا من أجيال.","\"For generations\" = من أجيال."],
+["I learned how to cook from my mother and grandmother.","تعلمت الطبخ من أمي وستي.","\"Grandmother\" = ستي/جدتي."],
+["You should taste the food before adding more seasoning.","لازم تدوقي الأكل قبل ما تضيفي بهارات.","\"Taste\" = دوق. \"Seasoning\" = بهارات."],
+["Boil the water first, then add the pasta.","اغلي المي أول شي، بعدين ضيفي المعكرونة.","\"Boil\" = اغلي. \"First...then\" = أول شي...بعدين."],
+["The secret to good food is fresh ingredients.","سر الأكل الطيب هو المكونات الطازة.","\"Ingredients\" = مكونات."],
+["She bakes the most delicious cakes I have ever tasted.","هي بتخبز أطيب كيكات دقتها بحياتي.","\"I have ever tasted\" = دقتها بحياتي. تجربة حياة."],
+["Can you teach me how to make grape leaves?","فيكي تعلميني كيف تعملي ورق عنب؟","\"Teach me how to\" = علميني كيف."],
+["I always cook extra food in case we have guests.","دايماً بطبخ أكل زيادة بحال إجا ضيوف.","\"In case\" = بحال/في حالة."],
+["The meat needs to simmer on low heat for two hours.","اللحمة لازم تطبخ على نار هادية ساعتين.","\"Simmer\" = طبخ على نار هادية."],
+["Mix the yogurt with cucumber and a pinch of salt.","اخلطي اللبن مع الخيار ورشة ملح.","\"A pinch of\" = رشة."],
+["I forgot to thaw the chicken, so dinner will be late.","نسيت أذوب الدجاج فالعشا رح يتأخر.","\"Thaw\" = ذوّب. \"So\" = ف/لذلك."],
+["This dish is best served with warm bread and salad.","هالأكلة أطيب شي مع خبز سخن وسلطة.","\"Best served with\" = أطيب مع."],
+["She makes her own bread instead of buying it.","هي بتعمل خبزها بدل ما تشتريه.","\"Instead of\" = بدل ما."],
+["I am trying to cook healthier meals for my family.","عم بحاول أطبخ أكل صحي أكتر لعيلتي.","\"Healthier\" = أصح. healthy → healthier."],
+["Drain the pasta and add the sauce on top.","صفّي المعكرونة وحطي الصلصة فوق.","\"Drain\" = صفّي."],
+["He surprised us by cooking dinner all by himself.","فاجأنا وطبخ العشا كله لحاله.","\"Surprised\" = فاجأ. \"All by himself\" = كله لحاله."],
+["The leftovers are in the fridge if you get hungry later.","بقايا الأكل بالبراد إذا جعتي بعدين.","\"Leftovers\" = بقايا الأكل."],
+["I usually meal prep on Sundays for the whole week.","عادة بجهز أكل الأسبوع يوم الأحد.","\"Meal prep\" = تحضير الأكل مسبقاً. عادة أمريكية."],
+["Be careful not to burn the garlic, it cooks very quickly.","انتبهي ما تحرقي الثوم، بستوي بسرعة.","\"Be careful not to\" = انتبهي ما."],
+["Cooking at home is healthier and cheaper than eating out.","الطبخ بالبيت أصح وأرخص من الأكل برا.","\"Cheaper than\" = أرخص من. \"Eating out\" = الأكل برا."],
+["She always adds a touch of cinnamon to her rice.","دايماً بتضيف شوية قرفة على الرز.","\"A touch of\" = شوية/لمسة. \"Cinnamon\" = قرفة."],
+["I need to deposit this check into my savings account.","لازم أودع هالشيك بحساب التوفير.","\"Deposit\" = أودع. \"Savings account\" = حساب توفير."],
+["Can you show me how to use the ATM machine?","فيكي تفرجيني كيف أستعمل الصراف الآلي؟","\"ATM\" = صراف آلي."],
+["I would like to transfer money to another account.","بدي أحوّل مصاري لحساب تاني.","\"Transfer\" = حوّل."],
+["My credit card bill is due at the end of the month.","فاتورة الكريديت كارد لازم تندفع آخر الشهر.","\"Due\" = مستحق."],
+["I need to set up automatic payments for my bills.","لازم أعمل دفع أوتوماتيكي لفواتيري.","\"Set up\" = أعمل/أجهز. \"Automatic payments\" = دفع أوتوماتيكي."],
+["The bank charged me an overdraft fee by mistake.","البنك حسبوا عليّ رسوم سحب زيادة بالغلط.","\"By mistake\" = بالغلط. \"Overdraft fee\" = رسوم سحب زيادة."],
+["I want to open a savings account for my children.","بدي أفتح حساب توفير لولادي.","مراجعة: open an account = افتح حساب."],
+["How long does it take for the transfer to go through?","قديش بياخد وقت لحتى يوصل التحويل؟","\"Go through\" = يوصل/ينفذ."],
+["I need to update my address at the bank.","لازم أحدّث عنواني بالبنك.","\"Update\" = حدّث. \"Address\" = عنوان."],
+["She applied for a credit card with a low interest rate.","قدمت على كريديت كارد بفائدة قليلة.","\"Applied for\" = قدمت على. \"Interest rate\" = نسبة فائدة."],
+["I need to file my taxes before the deadline.","لازم أقدم ضرائبي قبل الموعد النهائي.","\"File taxes\" = قدّم الضرائب. \"Deadline\" = موعد نهائي."],
+["The rent went up by a hundred dollars this year.","الإيجار طلع مية دولار هالسنة.","\"Went up\" = طلع/ارتفع."],
+["I am trying to build my credit score in America.","عم بحاول أبني تقييمي الائتماني بأمريكا.","\"Credit score\" = تقييم ائتماني. مهم كتير بأمريكا!"],
+["I need to get my documents translated and notarized.","لازم أترجم أوراقي وأوثقها.","\"Translated\" = مترجمة. \"Notarized\" = موثقة رسمياً."],
+["We are saving up for a down payment on a house.","عم نوفر للدفعة الأولى لبيت.","\"Down payment\" = دفعة أولى."],
+["The electric bill was higher than usual this month.","فاتورة الكهرباء كانت أعلى من العادة هالشهر.","\"Higher than usual\" = أعلى من العادة."],
+["I set up online banking to check my balance anytime.","عملت حساب أونلاين حتى أشيك على رصيدي بأي وقت.","\"Balance\" = رصيد."],
+["She got approved for a small business loan.","انقبلت بقرض لمشروع صغير.","\"Got approved\" = انقبلت. \"Loan\" = قرض."],
+["I need to renew my green card before it expires.","لازم أجدد الغرين كارد قبل ما تنتهي.","\"Expires\" = تنتهي صلاحيتها."],
+["The immigration office requires several forms of ID.","مكتب الهجرة بده عدة أنواع هوية.","\"Immigration\" = هجرة. \"ID\" = هوية."],
+["We hired an accountant to help us with our taxes.","وظفنا محاسب يساعدنا بالضرائب.","\"Accountant\" = محاسب."],
+["I am on a tight budget until the end of the month.","ميزانيتي ضيقة لآخر الشهر.","\"Tight budget\" = ميزانية ضيقة."],
+["The landlord said we need to sign a new lease.","صاحب البيت قال لازم نوقع عقد إيجار جديد.","\"Landlord\" = صاحب البيت. \"Lease\" = عقد إيجار."],
+["He lost his wallet and had to cancel all his cards.","ضيّع محفظته ولازم لغى كل كروته.","\"Cancel\" = لغى. \"Wallet\" = محفظة."],
+["I need to dispute a charge on my credit card.","لازم أعترض على مبلغ بكشف الكريديت كارد.","\"Dispute\" = أعترض. \"Charge\" = مبلغ."],
+["I finally paid off my car loan last month.","أخيراً خلصت أقساط سيارتي الشهر الماضي.","\"Paid off\" = خلصت الدفع."],
+["Always keep copies of important documents in a safe place.","دايماً احتفظي بنسخ عن الأوراق المهمة بمكان آمن.","\"Copies\" = نسخ. \"Safe place\" = مكان آمن."],
+["Would you and your family like to come over for dinner?","بتحبوا إنتي وعيلتك تيجوا عندنا عالعشا؟","\"Come over\" = تيجوا عندنا. دعوة."],
+["We are having a birthday party for my son this Saturday.","عم نعمل حفلة عيد ميلاد لابني هالسبت.","\"Birthday party\" = حفلة عيد ميلاد."],
+["Thank you for the invitation, we would love to come.","شكراً على الدعوة، بنحب نيجي.","\"Invitation\" = دعوة. \"We would love to\" = بنحب كتير."],
+["I am sorry, but we already have plans for that day.","آسفة، بس عنا خطط لهاليوم.","\"Already have plans\" = عنا خطط. اعتذار مهذب."],
+["She is the nicest person I have met since we moved here.","هي أطيب شخص تعرفت عليه من لما إجينا لهون.","\"The nicest\" = أطيب. \"Since\" = من لما."],
+["We get together with our neighbors every few weeks.","بنتلاقى مع جيراننا كل كم أسبوع.","\"Get together\" = نتلاقى."],
+["I brought you some food because I know you have been busy.","جبتلك أكل لأني بعرف إنك كنتي مشغولة.","\"Brought\" ماضي bring."],
+["Can I bring anything when I come to your house?","بدك أجيب شي لما أيجي عبيتكم؟","سؤال مهذب قبل الزيارة."],
+["It was so kind of you to help me with the kids.","كتير لطيف منك إنك ساعدتيني مع الولاد.","\"It was kind of you to\" = لطيف منك."],
+["My neighbor watches my children when I have appointments.","جارتي بتطلع على ولادي لما يكون عندي مواعيد.","\"Watches\" هون = بتطلع على."],
+["We should exchange phone numbers to stay in touch.","لازم نتبادل أرقام حتى نضل على تواصل.","\"Stay in touch\" = نضل على تواصل."],
+["I joined a women's group at the community center.","انضميت لمجموعة نسائية بمركز الحي.","\"Community center\" = مركز الحي."],
+["She invited me to go shopping with her next week.","عزمتني أروح أتسوق معها الأسبوع الجاي.","\"Invited me to\" = عزمتني."],
+["Making friends in a new country takes time and effort.","تكوين صداقات ببلد جديد بياخد وقت وجهد.","\"Effort\" = جهد."],
+["He always offers to help whenever we need anything.","دايماً بيعرض يساعد كل ما احتجنا شي.","\"Whenever\" = كل ما. \"Offers to\" = بيعرض."],
+["We celebrated Eid together with our Arab community.","عيّدنا سوا مع الجالية العربية.","\"Community\" = جالية/مجتمع."],
+["I appreciate everything you have done for our family.","بقدر كل شي عملتيه لعيلتنا.","\"Everything you have done\" = كل شي عملتيه."],
+["Let me know if there is anything I can do to help.","خبريني إذا في أي شي فيني أساعدك فيه.","\"Let me know if\" = خبريني إذا. عرض مساعدة."],
+["We had such a wonderful time at your party.","قضينا وقت كتير حلو بحفلتكم.","\"Such a wonderful time\" = وقت كتير حلو."],
+["I am happy to have found such good friends here.","مبسوطة إني لقيت أصحاب حلوين هون.","\"Happy to have found\" = مبسوطة إني لقيت."],
+["She taught me a lot about American culture.","علمتني كتير عن الثقافة الأمريكية.","\"Taught\" ماضي teach. \"Culture\" = ثقافة."],
+["Our children became best friends at school.","ولادنا صاروا أعز أصحاب بالمدرسة.","\"Became\" ماضي become. \"Best friends\" = أعز أصحاب."],
+["I am grateful to have neighbors who care about us.","ممتنة إنو عندي جيران يهتموا فينا.","\"Who care about us\" = يهتموا فينا."],
+["We are hosting a potluck dinner this Friday.","عم ننظم عشا مشترك هالجمعة.","\"Potluck\" = كل واحد بيجيب أكلة. عادة أمريكية."],
+["I feel like I finally belong to a community here.","حاسة إني أخيراً صرت أنتمي لمجتمع هون.","\"Belong to\" = أنتمي لـ."],
+["Can you show me how to download this app?","فيكي تفرجيني كيف أنزل هالتطبيق؟","\"Download\" = نزّل. \"App\" = تطبيق."],
+["I use Google Maps whenever I need to find a new place.","بستعمل خرائط غوغل كل ما بدي ألاقي مكان جديد.","\"Whenever\" = كل ما."],
+["She learned how to video call her family back home.","تعلمت كيف تعمل مكالمة فيديو مع عيلتها بالبلد.","\"Video call\" = مكالمة فيديو."],
+["You can pay your bills online instead of going to the office.","بتقدري تدفعي فواتيرك أونلاين بدل ما تروحي.","\"Instead of\" + verb+ing = بدل ما."],
+["I accidentally deleted an important photo from my phone.","بالغلط حذفت صورة مهمة من تلفوني.","\"Accidentally\" = بالغلط. \"Deleted\" = حذفت."],
+["I need to charge my phone, the battery is almost dead.","لازم أشحن تلفوني، البطارية عم تخلص.","\"Charge\" = اشحن. \"Battery\" = بطارية."],
+["You should update your phone to get the latest features.","لازم تحدثي تلفونك حتى تاخدي آخر الميزات.","\"Update\" = حدّث. \"Latest\" = آخر."],
+["I created an email account to receive important messages.","عملت إيميل حتى أستقبل رسائل مهمة.","\"Created\" = عملت. \"Receive\" = أستقبل."],
+["She uses a translation app when she doesn't understand.","بتستعمل تطبيق ترجمة لما ما تفهم.","\"Translation app\" = تطبيق ترجمة. مفيد!"],
+["Be careful about sharing personal information online.","انتبهي ما تشاركي معلومات شخصية على الإنترنت.","\"Personal information\" = معلومات شخصية. مهم!"],
+["I learned how to order groceries online.","تعلمت كيف أطلب أغراض أونلاين.","\"Order online\" = اطلب أونلاين."],
+["You can use YouTube to watch English learning videos.","بتقدري تستعملي يوتيوب تتفرجي فيديوهات إنجليزي.","\"For free\" = مجاناً."],
+["I set a reminder on my phone for my appointment.","حطيت تذكير على تلفوني لموعدي.","\"Set a reminder\" = حط تذكير."],
+["I use my phone calendar to keep track of appointments.","بستعمل تقويم التلفون أتابع مواعيدي.","\"Keep track of\" = أتابع."],
+["The school sends updates through their app.","المدرسة بتبعت تحديثات عبر تطبيقهم.","\"Updates\" = تحديثات. \"Through\" = عبر."],
+["You should create a strong password that is hard to guess.","لازم تعملي كلمة سر قوية صعب يخمنوها.","\"Strong password\" = كلمة سر قوية."],
+["I finally figured out how to use online banking.","أخيراً فهمت كيف أستعمل البنك الأونلاين.","\"Figured out\" = فهمت/اكتشفت."],
+["I use voice messages because typing in English is hard.","بستعمل رسائل صوتية لأنو الكتابة بالإنجليزي صعبة.","\"Voice messages\" = رسائل صوتية."],
+["My children help me with technology, they learn fast.","ولادي بساعدوني بالتكنولوجيا، بيتعلموا بسرعة.","\"Learn fast\" = يتعلموا بسرعة."],
+["I take screenshots of important information.","باخد سكرين شوت لمعلومات مهمة.","\"Screenshots\" = صور شاشة."],
+["Technology makes it easier to stay connected with family.","التكنولوجيا بتسهل نضل على تواصل مع العيلة.","\"Stay connected\" = نضل على تواصل."],
+["We are planning a trip to visit my family in Jordan.","عم نخطط لرحلة نزور عيلتي بالأردن.","\"Planning a trip\" = نخطط لرحلة."],
+["I need to renew my passport before we can travel.","لازم أجدد جوازي قبل ما نقدر نسافر.","\"Passport\" = جواز سفر. \"Renew\" = جدد."],
+["How much does a round-trip ticket to Amman cost?","قديش تذكرة رايح جاي لعمّان؟","\"Round-trip\" = رايح جاي. \"One-way\" = باتجاه واحد."],
+["We booked a hotel near the airport for our first night.","حجزنا فندق قريب من المطار لأول ليلة.","\"Booked\" = حجزنا."],
+["Please make sure to arrive at the airport two hours early.","تأكدي توصلي عالمطار قبل ساعتين.","\"Make sure\" = تأكدي."],
+["The flight has been delayed by two hours.","الرحلة تأخرت ساعتين.","\"Delayed\" = تأخرت. \"Due to\" = بسبب."],
+["We have a layover in Istanbul for three hours.","عنا توقف بإسطنبول لتلت ساعات.","\"Layover\" = توقف/ترانزيت."],
+["Can I have a window seat, please?","ممكن كرسي جنب الشباك لو سمحت؟","\"Window seat\" = جنب الشباك. \"Aisle seat\" = عالممر."],
+["The flight attendant asked me to fasten my seatbelt.","المضيفة طلبت مني أربط حزام الأمان.","\"Flight attendant\" = مضيف/ة. \"Fasten\" = اربط."],
+["We need to pick up our luggage from baggage claim.","لازم ناخد شنطنا من استلام الأمتعة.","\"Baggage claim\" = استلام الأمتعة."],
+["I always pack snacks for the kids on long flights.","دايماً بجهز أكل خفيف للولاد على الرحلات الطويلة.","\"Pack\" = جهز. \"Snacks\" = أكل خفيف."],
+["We rented a car so we can drive around the city.","استأجرنا سيارة حتى نتجول بالمدينة.","\"Rented\" = استأجرنا. \"Drive around\" = نتجول."],
+["The hotel room has a beautiful view of the mountains.","غرفة الفندق إلها إطلالة حلوة على الجبال.","\"View\" = إطلالة/منظر."],
+["I would like to check in. I have a reservation.","بدي أسجل دخول. عندي حجز.","\"Check in\" = سجل دخول. \"Reservation\" = حجز."],
+["We took the children to the beach every day.","وخدنا الولاد عالبحر كل يوم.","\"Took\" ماضي take. \"Beach\" = بحر/شاطئ."],
+["She bought souvenirs for all her friends.","اشترت تذكارات لكل أصحابها.","\"Souvenirs\" = تذكارات."],
+["The best part of the trip was seeing my family again.","أحلى شي بالرحلة كان إني شفت عيلتي.","\"The best part\" = أحلى شي."],
+["We spent two wonderful weeks with our relatives.","قضينا أسبوعين حلوين مع قرايبنا.","\"Spent\" ماضي spend. \"Relatives\" = قرايب."],
+["It was hard to say goodbye when it was time to leave.","كان صعب نودع لما إجا وقت نمشي.","\"Hard to say goodbye\" = صعب نودع."],
+["The kids didn't want to come back, they loved it there.","الولاد ما بدهم يرجعوا، حبوا هنيك.","\"Didn't want to\" = ما بدهم."],
+["We need to start planning our next vacation early.","لازم نبلش نخطط لإجازتنا الجاية بكير.","\"Start planning\" = نبلش نخطط."],
+["Traveling with children requires patience and planning.","السفر مع الولاد بده صبر وتخطيط.","\"Requires\" = بده/بيحتاج. \"Patience\" = صبر."],
+["I always carry important documents in my carry-on bag.","دايماً بشيل الأوراق المهمة بشنطة اليد.","\"Carry-on bag\" = شنطة اليد بالطيارة."],
+["The customs officer asked me how long I was visiting.","موظف الجمارك سألني قديش ناوية أضل.","\"Customs officer\" = موظف جمارك."],
+["Every trip teaches us something new about ourselves.","كل رحلة بتعلمنا شي جديد عن حالنا.","\"About ourselves\" = عن حالنا."],
+["Thanksgiving is when families gather and eat together.","عيد الشكر لما العيلة بتتجمع وبتاكل سوا.","\"Thanksgiving\" رابع خميس بتشرين التاني."],
+["We celebrate Eid al-Fitr and Eid al-Adha with our community.","بنعيّد عيد الفطر والأضحى مع جاليتنا.","\"Community\" = جالية."],
+["The Fourth of July is America's Independence Day.","الرابع من تموز عيد الاستقلال الأمريكي.","\"Independence Day\" = عيد الاستقلال. في ألعاب نارية."],
+["On Halloween, children dress up and collect candy.","بالهالوين الولاد بلبسوا تنكر وبجمعوا حلويات.","\"Dress up\" = يلبس تنكر. \"Candy\" = حلويات."],
+["Many stores have big sales on Black Friday.","كتير محلات بعملوا تنزيلات كبيرة الجمعة السوداء.","\"Black Friday\" = أكبر يوم تسوق بالسنة."],
+["In America, people tip at restaurants, usually 15 to 20 percent.","بأمريكا الناس بيعطوا بقشيش بالمطاعم، ١٥-٢٠٪.","\"Tip\" = بقشيش. لازم تعطي! عادة مهمة."],
+["It is common to say 'bless you' when someone sneezes.","عادي تقولي bless you لما حدا يعطس.","\"Sneezes\" = يعطس."],
+["When someone invites you over, it is polite to bring something.","لما حدا يعزمك، من الأدب تجيبي شي.","\"It is polite to\" = من الأدب."],
+["In America, you should always be on time for appointments.","بأمريكا لازم دايماً توصلي بالوقت للمواعيد.","\"On time\" = بالوقت. مهم كتير!"],
+["People here say please and thank you very often.","الناس هون بقولوا please و thank you كتير.","عادة مهمة حتى بين أفراد العيلة."],
+["It is normal to make small talk with strangers in line.","عادي تعملي محادثة قصيرة مع غرباء بالطابور.","\"Small talk\" = محادثة قصيرة خفيفة."],
+["Mother's Day is celebrated in May with gifts and flowers.","عيد الأم بأيار بهدايا وورود.","\"Mother's Day\" تاني أحد بأيار بأمريكا."],
+["Back-to-school season is in August and September.","موسم الرجوع عالمدرسة بآب وأيلول.","\"Back-to-school\" = الرجوع للمدرسة."],
+["People here eat turkey and pumpkin pie on Thanksgiving.","الناس هون بياكلوا ديك حبش وفطيرة يقطين بعيد الشكر.","\"Turkey\" = ديك حبش. \"Pumpkin pie\" = فطيرة يقطين."],
+["It is considered rude to ask someone how much they make.","بيعتبروه قلة أدب تسألي حدا قديش معاشه.","\"Considered rude\" = بيعتبروه قلة أدب. موضوع حساس!"],
+["Americans celebrate New Year's Eve with fireworks.","الأمريكان بيحتفلوا بليلة رأس السنة بألعاب نارية.","\"Fireworks\" = ألعاب نارية."],
+["It is customary to RSVP when you receive an invitation.","من العادة تردي لما توصلك دعوة.","\"RSVP\" = رد على الدعوة. مهم كتير!"],
+["Many families take road trips during summer vacation.","كتير عائلات بياخدوا رحلات بالسيارة بالصيف.","\"Road trip\" = رحلة بالسيارة. عادة أمريكية شائعة."],
+["Garage sales are a popular way to buy things cheaply.","بيع الكراج طريقة شائعة تشتري أغراض برخص.","\"Garage sale\" = بيع أغراض قدام البيت."],
+["Community events are a great way to meet new people.","فعاليات الحي طريقة حلوة تتعرفي على ناس جديدة.","\"Community events\" = فعاليات الحي."],
+["In America, recycling is important.","بأمريكا إعادة التدوير مهمة.","\"Recycling\" = إعادة التدوير."],
+["Understanding American customs helps you feel at home.","فهم العادات الأمريكية بساعدك تحسي حالك ببيتك.","\"Feel at home\" = تحسي حالك ببيتك."],
+["If I had known about the sale, I would have bought more.","لو كنت بعرف عن التنزيلات، كنت اشتريت أكتر.","\"If I had known...I would have\" = لو كنت بعرف. الشرط التالت."],
+["Even though the weather was bad, we still had a great time.","مع إنو الجو كان سيء، ضل قضينا وقت حلو.","\"Even though\" = مع إنو."],
+["The more I practice English, the more confident I feel.","كل ما أتمرن إنجليزي أكتر، كل ما بحس بثقة أكتر.","\"The more...the more\" = كل ما...كل ما."],
+["I wish I had started learning English earlier.","يا ريت كنت بلشت أتعلم إنجليزي أبكر.","\"I wish I had\" = يا ريت كنت."],
+["Not only did she learn English, but she also got a good job.","مش بس تعلمت إنجليزي، كمان حصلت على شغل منيح.","\"Not only...but also\" = مش بس...كمان."],
+["Although it was difficult at first, I never gave up.","مع إنو كان صعب بالأول، ما استسلمت.","\"Although\" = مع إنو. \"Gave up\" = استسلم."],
+["She speaks English so well that people think she was born here.","بتحكي إنجليزي حلو لدرجة بيفتكروا هي من هون.","\"So well that\" = لدرجة."],
+["If you study a little every day, you will improve quickly.","إذا درستي شوي كل يوم، رح تتحسني بسرعة.","\"If you...you will\" = إذا...رح. الشرط الأول."],
+["I remember the first day we arrived like it was yesterday.","بتذكر أول يوم وصلنا كأنو مبارح.","\"Like it was yesterday\" = كأنو مبارح."],
+["Despite all the challenges, I am proud of what I achieved.","رغم كل التحديات، فخورة بشو حققت.","\"Despite\" = رغم. \"Achieved\" = حققت."],
+["Learning a new language is one of the hardest things I have done.","تعلم لغة جديدة من أصعب الأشياء اللي عملتها.","\"One of the hardest\" = من أصعب."],
+["Whenever I feel discouraged, I remember how far I have come.","كل ما بحس بإحباط، بتذكر قديش تقدمت.","\"Discouraged\" = محبط."],
+["My children are growing up speaking both Arabic and English.","ولادي عم يكبروا بيحكوا عربي وإنجليزي.","\"Both...and\" = الاثنين."],
+["I believe education is the key to a better future.","بآمن إنو التعليم مفتاح مستقبل أحسن.","\"The key to\" = مفتاح."],
+["No matter where you come from, you can achieve your dreams.","مهما من وين إنتي، بتقدري تحققي أحلامك.","\"No matter\" = مهما."],
+["The most important lesson I learned is to never stop trying.","أهم درس تعلمته إنو ما لازم أوقف أحاول.","\"Never stop trying\" = ما توقف تحاول."],
+["I used to be afraid of making mistakes, but now I embrace them.","كنت أخاف من الغلط، بس هلق بتقبلهم.","\"Embrace\" = أتقبل."],
+["Living in two cultures has made me a stronger person.","العيش بثقافتين خلاني شخص أقوى.","\"Has made me\" = خلاني. \"Stronger\" = أقوى."],
+["I am thankful for every person who helped me along the way.","ممتنة لكل شخص ساعدني بالطريق.","\"Along the way\" = خلال الرحلة."],
+["She went from knowing no English to reading books in English.","راحت من إنها ما بتعرف إنجليزي لقراءة كتب بالإنجليزي.","\"Went from...to\" تقدم كبير!"],
+["Hard work and determination can open doors you never imagined.","الشغل الجاد والإصرار ممكن يفتحولك أبواب ما تخيلتيها.","\"Determination\" = إصرار. \"Open doors\" تعبير مجازي."],
+["I want my children to be proud of their heritage.","بدي ولادي يكونوا فخورين بتراثهم.","\"Heritage\" = تراث."],
+["Sometimes I translate in my head before I speak, and that is okay.","أحياناً بترجم براسي قبل ما أحكي، وهاد عادي.","لا تخجلي! كلنا بنعمل هيك بالأول."],
+["Every small step forward is still a step in the right direction.","كل خطوة صغيرة لقدام بتضل خطوة بالاتجاه الصحيح.","\"Right direction\" = الاتجاه الصحيح."],
+["I have learned that asking for help is a sign of strength.","تعلمت إنو طلب المساعدة علامة قوة.","\"Sign of strength\" = علامة قوة. مش ضعف!"],
+["My journey with English has taught me patience.","رحلتي مع الإنجليزي علمتني الصبر.","\"Journey\" = رحلة. \"Patience\" = صبر."],
+["I can now help my children with their homework in English.","هلق بقدر أساعد ولادي بوظايفهم بالإنجليزي.","تقدم كبير من أول الكورس!"],
+["The world becomes bigger when you speak another language.","العالم بيصير أكبر لما بتحكي لغة تانية.","\"Another language\" = لغة تانية."],
+["I am not the same person I was when I started this course.","أنا مش نفس الشخص اللي كنته لما بلشت هالكورس.","تطور شخصي ولغوي!"],
+["Thank you for believing in yourself and completing this journey.","شكراً لأنك آمنتي بحالك وكملتي هالرحلة.","\"Believing in yourself\" = آمنتي بحالك."],
+["You did it! You are proof that anything is possible.","عملتيها! إنتي دليل إنو أي شي ممكن. مبروك!","مبروك على إنهاء المستوى التاني! 🎉"]
+];
+
+let st={m:0,l:0};
+const prog=JSON.parse(localStorage.getItem('ec2-prog')||'{}');
+const started=localStorage.getItem('ec2-started');
+function saveProg(){localStorage.setItem('ec2-prog',JSON.stringify(prog))}
+function getGlobalIdx(m,l){let idx=0;for(let i=0;i<m;i++)idx+=MS[i].c;return idx+l}
+function getMonthLesson(gi){let m=0,idx=gi;while(m<MS.length&&idx>=MS[m].c){idx-=MS[m].c;m++}return{m,l:idx}}
+function completedInMonth(m){let s=getGlobalIdx(m,0),c=0;for(let i=0;i<MS[m].c;i++)if(prog[s+i])c++;return c}
+function totalCompleted(){let c=0;for(let k in prog)if(prog[k])c++;return c}
+function speak(text,rate){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate||0.7;speechSynthesis.speak(u)}
+function exportProgress(){return btoa(unescape(encodeURIComponent(JSON.stringify({p:prog,s:started?'1':'0',v:2}))))}
+function importProgress(code){try{const d=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));if(!d.p)throw 0;Object.keys(prog).forEach(k=>delete prog[k]);Object.assign(prog,d.p);saveProg();if(d.s==='1')localStorage.setItem('ec2-started','1');return true}catch(e){return false}}
+function showBackupPanel(){const bp=document.getElementById('backup-panel');if(bp)bp.classList.toggle('show')}
+function doExport(){document.getElementById('bp-code').value=exportProgress();document.getElementById('bp-msg').className='bp-msg ok';document.getElementById('bp-msg').textContent='تم! انسخي هالكود واحتفظي فيه.'}
+function doCopy(){const ta=document.getElementById('bp-code');ta.select();navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById('bp-msg').className='bp-msg ok';document.getElementById('bp-msg').textContent='تم النسخ!'})}
+function doImport(){const code=document.getElementById('bp-code').value;if(!code.trim()){document.getElementById('bp-msg').className='bp-msg err';document.getElementById('bp-msg').textContent='الصقي الكود أولاً.';return}if(importProgress(code)){document.getElementById('bp-msg').className='bp-msg ok';document.getElementById('bp-msg').textContent='تم! رح يتحدث...';setTimeout(()=>location.reload(),1000)}else{document.getElementById('bp-msg').className='bp-msg err';document.getElementById('bp-msg').textContent='الكود مش صحيح.'}}
+function render(){const app=document.getElementById('app');if(!started){app.innerHTML=`<header><h1>تعلمي الإنجليزي</h1><div class="level-badge">المستوى الثاني</div><p>كورس سنة - ٣٦٥ درس متقدم</p></header><div class="welcome"><h2>مبروك على إنهاء المستوى الأول!</h2><p>هاد المستوى التاني - جمل أطول، قواعد متقدمة، ومواضيع جديدة.</p><p style="margin-top:24px"><strong>الشهور:</strong></p><p style="font-size:0.9rem;line-height:2">١. الحكي عن الماضي<br>٢. التخطيط والمستقبل<br>٣. الطلبات والقدرات<br>٤. عند الدكتور - متقدم<br>٥. المدرسة والتعليم<br>٦. الطبخ والوصفات<br>٧. البنك والمعاملات<br>٨. الحياة الاجتماعية<br>٩. التكنولوجيا والإنترنت<br>١٠. السفر والإجازة<br>١١. الثقافة الأمريكية<br>١٢. محادثات متقدمة</p><button class="start-btn" onclick="localStorage.setItem('ec2-started','1');render()">يلا نبلش!</button></div>`;return}renderLesson()}
+function renderLesson(){const app=document.getElementById('app');const gi=getGlobalIdx(st.m,st.l);const lesson=L[gi];const done=prog[gi];const tc=totalCompleted();const pct=Math.round(tc/365*100);let mt='';for(let i=0;i<MS.length;i++){const mc=completedInMonth(i);const f=mc===MS[i].c;mt+=`<div class="month-tab${i===st.m?' active':''}" onclick="st.m=${i};st.l=0;renderLesson()">${f?'<span class="check">&#10003;</span>':''}${i+1}. ${MS[i].n}</div>`}let dots='';for(let i=0;i<MS[st.m].c;i++){const d=getGlobalIdx(st.m,i);const c=i===st.l?'current':(prog[d]?'done':'');dots+=`<div class="dot ${c}" onclick="st.l=${i};renderLesson()"></div>`}app.innerHTML=`<header><button class="gear-btn" onclick="showBackupPanel()">&#9881;</button><h1>تعلمي الإنجليزي</h1><div class="level-badge">المستوى الثاني</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="progress-text">${tc} من ٣٦٥ (${pct}%)</div></header><div id="backup-panel" class="backup-panel"><h3>&#128190; نسخة احتياطية</h3><p>احفظي تقدمك حتى ما يضيع!</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px"><button class="bp-btn" onclick="doExport()">&#128190; حفظ</button><button class="bp-btn" onclick="doCopy()">&#128203; نسخ</button><button class="bp-btn restore" onclick="doImport()">&#128260; استرجاع</button><button class="bp-btn close" onclick="showBackupPanel()">&#10005; إغلاق</button></div><textarea id="bp-code" placeholder="كود النسخة الاحتياطية..."></textarea><div id="bp-msg" class="bp-msg"></div></div><div class="months">${mt}</div><div class="month-title">${MS[st.m].e} - ${MS[st.m].n}</div><div class="lesson-nav"><span>درس ${st.l+1} من ${MS[st.m].c}</span><div class="lesson-dots">${dots}</div></div><div class="card"><div class="card-header"><span class="day-num">اليوم ${gi+1} من ٣٦٥</span>${done?'<span style="color:#16a34a;font-size:0.85rem">&#10003; تم</span>':''}</div><div class="card-body"><div class="english-sentence" onclick="speak('${lesson[0].replace(/'/g,"\\'")}')"> ${lesson[0]}</div><div class="controls"><button class="btn btn-listen" onclick="speak('${lesson[0].replace(/'/g,"\\'")}')">&#9654; اسمعيها</button><button class="btn btn-listen" onclick="speak('${lesson[0].replace(/'/g,"\\'")}',0.45)">&#128034; ببطء</button><button class="btn btn-translate" onclick="document.getElementById('tr').classList.toggle('show')">&#127760; الترجمة</button><button class="btn btn-tip" onclick="document.getElementById('tp').classList.toggle('show')">&#128161; نصيحة</button><button class="btn btn-words" onclick="showWords()">&#128220; كلمة كلمة</button></div><div id="word-area"></div><div id="tr" class="translation">${lesson[1]}</div><div id="tp" class="tip">${lesson[2]}</div><button class="btn btn-complete${done?' done':''}" onclick="markDone(${gi})">${done?'&#10003; تم - اضغطي للإلغاء':'&#10003; خلصت هالدرس'}</button></div></div><div class="bottom-nav"><button class="nav-btn" ${gi>=364?'disabled':''}onclick="goNext()">الدرس الجاي &#8592;</button><span class="lesson-count">${gi+1}/365</span><button class="nav-btn" ${gi<=0?'disabled':''}onclick="goPrev()">&#8594; الدرس السابق</button></div>`;setTimeout(()=>{const a=document.querySelector('.month-tab.active');if(a)a.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})},100)}
+function showWords(){const gi=getGlobalIdx(st.m,st.l);const w=L[gi][0].replace(/[.,!?;:'"]/g,'').split(' ');const a=document.getElementById('word-area');if(a.innerHTML){a.innerHTML='';return}a.innerHTML='<div class="word-mode">'+w.map(x=>`<button class="word-btn" onclick="speak('${x.replace(/'/g,"\\'")}',0.5)">${x}</button>`).join('')+'</div>'}
+function markDone(gi){if(prog[gi])delete prog[gi];else prog[gi]=true;saveProg();renderLesson()}
+function goNext(){const gi=getGlobalIdx(st.m,st.l);if(gi>=364)return;const n=getMonthLesson(gi+1);st.m=n.m;st.l=n.l;renderLesson();window.scrollTo(0,0)}
+function goPrev(){const gi=getGlobalIdx(st.m,st.l);if(gi<=0)return;const n=getMonthLesson(gi-1);st.m=n.m;st.l=n.l;renderLesson();window.scrollTo(0,0)}
+const ld=Object.keys(prog).map(Number).sort((a,b)=>b-a)[0];if(ld!==undefined&&ld<364){const n=getMonthLesson(ld+1);st.m=n.m;st.l=n.l}
+render();
+</script>
+</body>
+</html>
