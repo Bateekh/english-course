@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>كورس الإنجليزي - المستوى الثالث</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','Arial',sans-serif;background:#f0f4f8;min-height:100vh;color:#1e293b}
+#app{max-width:500px;margin:0 auto;padding:0 0 80px 0}
+header{background:linear-gradient(135deg,#047857,#10b981);color:#fff;padding:20px;text-align:center;position:relative}
+header h1{font-size:1.4rem;margin-bottom:4px}
+header p{font-size:0.85rem;opacity:0.9}
+.progress-bar{background:rgba(255,255,255,0.2);height:8px;border-radius:4px;margin-top:12px;overflow:hidden}
+.progress-fill{background:#fbbf24;height:100%;border-radius:4px;transition:width 0.5s}
+.progress-text{font-size:0.75rem;margin-top:4px;opacity:0.8}
+.months{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #e2e8f0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.months::-webkit-scrollbar{display:none}
+.month-tab{flex-shrink:0;padding:12px 16px;font-size:0.8rem;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;color:#64748b;transition:all 0.2s}
+.month-tab.active{color:#047857;border-bottom-color:#047857;font-weight:bold}
+.month-tab .check{color:#16a34a;margin-right:4px}
+.lesson-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid #e2e8f0}
+.lesson-nav span{font-size:0.85rem;color:#64748b}
+.lesson-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:60%}
+.dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;cursor:pointer;transition:all 0.2s}
+.dot.done{background:#16a34a}
+.dot.current{background:#047857;transform:scale(1.3)}
+.card{background:#fff;margin:16px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);overflow:hidden}
+.card-header{padding:16px 20px 8px;display:flex;justify-content:space-between;align-items:center}
+.day-num{font-size:0.8rem;color:#94a3b8}
+.card-body{padding:8px 20px 20px}
+.english-sentence{direction:ltr;text-align:left;font-size:1.3rem;line-height:1.6;color:#1e293b;padding:16px 0;font-weight:500;cursor:pointer;unicode-bidi:plaintext}
+.english-sentence:active{color:#047857}
+.word-mode{direction:ltr;text-align:left;display:flex;flex-wrap:wrap;gap:8px;padding:16px 0}
+.word-btn{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;border-radius:8px;padding:8px 14px;font-size:1.1rem;cursor:pointer;transition:all 0.15s}
+.word-btn:active{background:#047857;color:#fff}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.btn{border:none;border-radius:10px;padding:10px 16px;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;font-family:inherit}
+.btn:active{transform:scale(0.96)}
+.btn-listen{background:#ecfdf5;color:#047857}
+.btn-translate{background:#f0fdf4;color:#166534}
+.btn-tip{background:#fef3c7;color:#92400e}
+.btn-words{background:#fdf2f8;color:#9d174d}
+.btn-complete{background:#16a34a;color:#fff;width:100%;justify-content:center;padding:12px;margin-top:8px;font-size:0.95rem}
+.btn-complete.done{background:#e2e8f0;color:#64748b}
+.translation{direction:rtl;text-align:right;background:#f0fdf4;padding:14px;border-radius:10px;margin-top:12px;font-size:1.05rem;line-height:1.8;color:#166534;display:none}
+.translation.show{display:block}
+.tip{direction:rtl;text-align:right;background:#fef3c7;padding:14px;border-radius:10px;margin-top:8px;font-size:0.9rem;line-height:1.8;color:#92400e;display:none}
+.tip.show{display:block}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;padding:12px 20px;max-width:500px;margin:0 auto;z-index:10}
+.nav-btn{background:#047857;color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:0.9rem;cursor:pointer;font-family:inherit}
+.nav-btn:disabled{background:#e2e8f0;color:#94a3b8}
+.nav-btn:active{background:#065f46}
+.lesson-count{display:flex;align-items:center;font-size:0.85rem;color:#64748b}
+.welcome{padding:30px 20px;text-align:center}
+.welcome h2{font-size:1.5rem;margin-bottom:16px;color:#047857}
+.welcome p{font-size:1rem;line-height:1.8;color:#475569;margin-bottom:12px}
+.welcome .start-btn{background:#047857;color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:1.1rem;cursor:pointer;margin-top:20px;font-family:inherit}
+.month-title{padding:12px 20px;font-size:0.85rem;color:#64748b;text-align:center;background:#f8fafc}
+.gear-btn{position:absolute;left:16px;top:20px;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:0.85}
+.backup-panel{background:#fff;margin:16px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:20px;display:none}
+.backup-panel.show{display:block}
+.backup-panel h3{font-size:1.1rem;margin-bottom:12px;color:#047857}
+.backup-panel p{font-size:0.9rem;color:#475569;line-height:1.7;margin-bottom:12px}
+.backup-panel textarea{width:100%;height:80px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:0.85rem;font-family:monospace;direction:ltr;resize:none;margin-bottom:8px}
+.backup-panel .bp-btn{background:#047857;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:0.9rem;cursor:pointer;margin-left:8px;font-family:inherit}
+.backup-panel .bp-btn.restore{background:#16a34a}
+.backup-panel .bp-btn.close{background:#94a3b8}
+.bp-msg{font-size:0.85rem;margin-top:8px;padding:8px;border-radius:6px;display:none}
+.bp-msg.ok{display:block;background:#f0fdf4;color:#166534}
+.bp-msg.err{display:block;background:#fef2f2;color:#991b1b}
+.level-badge{display:inline-block;background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:12px;font-size:0.75rem;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const MS=[
+{n:"الشرط والاحتمالات",e:"Conditionals & If Clauses",c:31},
+{n:"المبني للمجهول",e:"Passive Voice",c:28},
+{n:"نقل الكلام",e:"Reported Speech",c:31},
+{n:"الأفعال المركبة",e:"Phrasal Verbs",c:30},
+{n:"الشغل والمهنية",e:"Workplace & Professional",c:31},
+{n:"السكن والجيران",e:"Housing & Community",c:30},
+{n:"القانون والحكومة",e:"Legal & Government",c:31},
+{n:"التربية بأمريكا",e:"Parenting in America",c:31},
+{n:"تعابير وأمثال",e:"Idioms & Expressions",c:30},
+{n:"الأخبار والإعلام",e:"News & Media",c:31},
+{n:"القصص والروايات",e:"Storytelling & Narratives",c:30},
+{n:"النقاش والحوار",e:"Debates & Discussions",c:31}
+];
+const L=[
+// Month 1: Conditionals (31)
+["If I had more time, I would learn to play the piano.","لو كان عندي وقت أكتر، كنت تعلمت أعزف بيانو.","\"If I had...I would\" = لو كان...كنت. الشرط التاني: موقف غير حقيقي بالحاضر."],
+["If you don't hurry, we will miss the bus.","إذا ما استعجلتي، رح نفوّت الباص.","\"If you don't...we will\" = إذا ما...رح. الشرط الأول: موقف ممكن يصير."],
+["I would travel the world if I could speak every language.","كنت سافرت حول العالم لو كنت بحكي كل لغة.","الشرط التاني: بنستعمله للأحلام والأمنيات."],
+["What would you do if you won the lottery?","شو كنتي تعملي لو ربحتي اللوتري؟","سؤال شرطي ممتع. \"Won\" ماضي win بس هون مش عن الماضي فعلاً."],
+["If it stops raining, we will go to the park.","إذا وقفت الشتي، رح نروح عالحديقة.","الشرط الأول: خطة حقيقية تعتمد على شي."],
+["I wouldn't have been late if the traffic wasn't so bad.","ما كنت تأخرت لو ما كانت الزحمة هيك.","الشرط التالت: ندم عن الماضي. \"Wouldn't have been\" = ما كنت."],
+["If you need anything, please don't hesitate to ask.","إذا بدك أي شي، لا تترددي تسألي.","\"Don't hesitate to\" = لا تتردد. تعبير مهذب ومهني."],
+["She would have called you if she had had your number.","كانت اتصلت فيكي لو كان عندها رقمك.","\"Would have called\" + \"if she had had\" = الشرط التالت عن الماضي."],
+["If we save enough money, we can buy a house next year.","إذا وفرنا مصاري كافي، بنقدر نشتري بيت السنة الجاية.","\"If we save...we can\" = الشرط الأول مع can."],
+["I would be happy if you could come to the party.","بكون مبسوطة إذا بتقدري تيجي عالحفلة.","\"Would be happy if you could\" = الشرط التاني. أمنية مهذبة."],
+["If the store is closed, we will try a different one.","إذا الدكانة مسكرة، رح نجرب وحدة تانية.","\"If...will\" = خطة بديلة."],
+["What would you do if you forgot your wallet at home?","شو كنتي تعملي لو نسيتي محفظتك بالبيت؟","سؤال شرطي: \"What would you do if...?\""],
+["If I were you, I would talk to the teacher about it.","لو أنا محلك، كنت حكيت مع المعلمة عن الموضوع.","\"If I were you\" = لو أنا محلك. نصيحة. دايماً were مش was."],
+["She will be disappointed if you don't come to her graduation.","رح تنزعل إذا ما إجيتي على تخرجها.","\"Disappointed\" = منزعل/محبط."],
+["If we had left earlier, we would have arrived on time.","لو كنا طلعنا أبكر، كنا وصلنا بالوقت.","ندم: \"If we had left...would have arrived\"."],
+["I would help you move if I didn't have to work that day.","كنت ساعدتك تنتقلي لو ما كان لازم أشتغل هاليوم.","الشرط التاني: سبب مش قادرة."],
+["If the weather is nice this weekend, let's have a barbecue.","إذا الجو حلو هالويكند، يلا نعمل شوي.","\"Let's\" + اقتراح مع شرط."],
+["He would have passed the test if he had studied more.","كان نجح بالامتحان لو كان درس أكتر.","الشرط التالت: ماضي ما منقدر نغيره."],
+["If you eat too fast, you will get a stomachache.","إذا أكلتي بسرعة، رح يوجعك بطنك.","نصيحة عامة بصيغة الشرط الأول."],
+["I would feel much better if I exercised more regularly.","كنت حسيت حالي أحسن بكتير لو تمرنت أكتر بانتظام.","\"Regularly\" = بانتظام."],
+["If they offer me the job, I will definitely accept it.","إذا عرضوا عليي الشغل، أكيد رح أقبله.","\"Definitely\" = أكيد. تأكيد قوي."],
+["What would have happened if we hadn't moved to America?","شو كان صار لو ما انتقلنا عأمريكا؟","سؤال فلسفي عن الماضي بالشرط التالت."],
+["If you see something suspicious, you should call the police.","إذا شفتي شي مشبوه، لازم تتصلي بالشرطة.","\"Suspicious\" = مشبوه. نصيحة مهمة."],
+["I would buy that house if it weren't so expensive.","كنت اشتريت هالبيت لو ما كان غالي هيك.","\"Weren't\" مع الشرط التاني = لو ما كان."],
+["If my children behave well, I take them out for ice cream.","إذا ولادي تصرفوا منيح، بوخدهم على بوظة.","شرط صفري: عادة. If + present, present."],
+["She wouldn't have gotten lost if she had used the GPS.","ما كانت ضاعت لو استعملت الـ GPS.","\"Gotten lost\" = ضاعت. الشرط التالت."],
+["If you don't understand something, it is perfectly okay to ask again.","إذا ما فهمتي شي، عادي كتير تسألي كمان مرة.","\"Perfectly okay\" = عادي كتير. تشجيع!"],
+["I would have cooked dinner if I had known you were coming.","كنت طبخت عشا لو كنت بعرف إنكم جايين.","ندم مهذب عن الماضي."],
+["If we work together, we can finish this much faster.","إذا اشتغلنا سوا، بنقدر نخلص أسرع بكتير.","\"Work together\" = نشتغل سوا. \"Much faster\" = أسرع بكتير."],
+["Life would be boring if everything were always easy.","الحياة كانت تكون مملة لو كل شي كان سهل.","\"Boring\" = ممل. فلسفة بجملة شرطية!"],
+// Month 2: Passive Voice (28)
+["The school was built in nineteen ninety-five.","المدرسة انبنت بسنة ألف وتسعمية وخمسة وتسعين.","المبني للمجهول: was + past participle. ما بنعرف مين بنى."],
+["English is spoken in many countries around the world.","الإنجليزي بينحكى بكتير بلدان حول العالم.","\"Is spoken\" = بينحكى. حقيقة عامة بالمبني للمجهول."],
+["The meeting has been rescheduled to next Monday.","الاجتماع انعاد جدولته ليوم الإثنين الجاي.","\"Has been rescheduled\" = تم إعادة جدولته. إعلان رسمي."],
+["All students are required to wear uniforms at this school.","كل الطلاب مطلوب منهم يلبسوا زي بهالمدرسة.","\"Are required to\" = مطلوب منهم. قاعدة رسمية."],
+["The road is being repaired, so we need to take a detour.","الطريق عم ينصلح، فلازم ناخد طريق تاني.","\"Is being repaired\" = عم ينصلح. مبني للمجهول مستمر."],
+["She was given an award for her outstanding community service.","انعطت جائزة على خدمتها المتميزة للمجتمع.","\"Was given\" = انعطت. \"Outstanding\" = متميز."],
+["The documents must be submitted before the end of the month.","الأوراق لازم تنسلّم قبل آخر الشهر.","\"Must be submitted\" = لازم تنسلّم. must + مبني للمجهول."],
+["Our flight has been canceled due to severe weather conditions.","رحلتنا انلغت بسبب ظروف جوية صعبة.","\"Has been canceled\" = انلغت. \"Severe\" = صعب/شديد."],
+["Children should be taught to respect others from a young age.","الولاد لازم ينعلموا يحترموا غيرهم من صغرهم.","\"Should be taught\" = لازم ينعلموا."],
+["The new park was designed to be accessible for everyone.","الحديقة الجديدة صُممت لتكون متاحة للجميع.","\"Accessible\" = متاح/سهل الوصول. \"Designed\" = صُممت."],
+["Applications are being reviewed and we will contact you soon.","الطلبات عم يتم مراجعتها ورح نتواصل معكم قريباً.","\"Are being reviewed\" = عم يتم مراجعتها. بريد رسمي."],
+["The house was sold for much more than the asking price.","البيت انباع بأكتر بكتير من السعر المطلوب.","\"Was sold\" = انباع. \"Asking price\" = السعر المطلوب."],
+["Smoking is not allowed inside any public building.","التدخين مش مسموح جوا أي مبنى عام.","\"Is not allowed\" = مش مسموح. قاعدة."],
+["The test results will be sent to you by email within a week.","نتائج الفحص رح تنبعتلكم بالإيميل خلال أسبوع.","\"Will be sent\" = رح تنبعت. مستقبل + مبني للمجهول."],
+["She was promoted to manager after only two years of work.","ترقت لمديرة بعد بس سنتين شغل.","\"Was promoted\" = ترقت. \"Manager\" = مدير/ة."],
+["The cookies were made from scratch using my grandmother's recipe.","الكوكيز انعملت من الصفر بوصفة ستي.","\"From scratch\" = من الصفر. تعبير مهم!"],
+["Safety rules must be followed at all times in the building.","قوانين السلامة لازم تنتبع بكل الأوقات بالمبنى.","\"At all times\" = بكل الأوقات."],
+["The package was delivered while I was at work this morning.","الطرد توصّل وأنا كنت بالشغل هالصبح.","\"Was delivered\" = توصّل."],
+["Our neighborhood is known for being very safe and family-friendly.","حينا معروف إنو كتير آمن ومناسب للعائلات.","\"Is known for\" = معروف بـ."],
+["The decision was made after careful consideration of all options.","القرار انتخذ بعد دراسة كل الخيارات بعناية.","\"Careful consideration\" = دراسة بعناية."],
+["Visitors are asked to sign in at the front desk upon arrival.","الزوار مطلوب منهم يسجلوا بالاستقبال لما يوصلوا.","\"Upon arrival\" = لما يوصلوا. رسمية."],
+["The project is expected to be completed by the end of December.","المشروع متوقع يخلص بنهاية كانون الأول.","\"Is expected to\" = متوقع إنو."],
+["He was completely surprised by the birthday party we organized.","تفاجأ بالكامل بحفلة عيد الميلاد اللي نظمناها.","\"Was surprised by\" = تفاجأ بـ."],
+["Fresh bread is baked every single morning at the local bakery.","خبز طازة بينخبز كل صبح بالفرن المحلي.","\"Every single morning\" = كل صبح بدون استثناء."],
+["The report was written in both English and Arabic for all parents.","التقرير انكتب بالإنجليزي والعربي لكل الأهل.","\"In both...and\" = بالاثنين."],
+["Parents are strongly encouraged to attend all school events.","الأهل منشجعين بقوة يحضروا كل فعاليات المدرسة.","\"Strongly encouraged\" = منشجعين بقوة."],
+["The problem was quickly solved by the experienced maintenance team.","المشكلة انحلت بسرعة من فريق الصيانة الخبير.","\"Experienced\" = خبير. \"Maintenance\" = صيانة."],
+["Hundreds of trees were planted along the new highway last spring.","ميات الأشجار انزرعت على طول الأوتوستراد الجديد الربيع الماضي.","\"Were planted\" = انزرعت. \"Along\" = على طول."],
+// Month 3: Reported Speech (31)
+["She said that she would be late for the meeting today.","قالت إنها رح تتأخر عالاجتماع اليوم.","نقل الكلام: الفعل بيتغير. will → would."],
+["He told me that the store usually closes at nine o'clock.","قلي إنو الدكانة عادة بتسكر الساعة تسعة.","\"Told me that\" = قلي إنو. told بتاخد مفعول به."],
+["The teacher asked us to hand in our assignments by Friday.","المعلمة طلبت مننا نسلم وظايفنا ليوم الجمعة.","\"Asked us to\" = طلبت مننا. أمر غير مباشر."],
+["My mother told me that she had always been proud of me.","أمي قالتلي إنها دايماً كانت فخورة فيي.","\"Had always been\" = دايماً كانت. الماضي التام بنقل الكلام."],
+["The doctor explained that I should reduce my sugar intake.","الدكتور شرح إنو لازم أخفف أكل السكر.","\"Reduce\" = خفف. \"Intake\" = استهلاك."],
+["She asked me whether I wanted to join her English study group.","سألتني إذا بدي أنضم لمجموعة دراسة الإنجليزي تبعتها.","\"Whether\" أو \"if\" بنقل الأسئلة."],
+["He mentioned that he had been looking for a new apartment.","ذكر إنو كان عم يدور على شقة جديدة.","\"Mentioned\" = ذكر. أخف من \"said\"."],
+["The news reported that a major storm was heading toward our area.","الأخبار حكت إنو عاصفة كبيرة جاية باتجاه منطقتنا.","\"Heading toward\" = جاية باتجاه. \"Major\" = كبيرة."],
+["She told her children that dinner would be ready in ten minutes.","قالت لولادها إنو العشا رح يكون جاهز بعد عشر دقائق.","will → would بنقل الكلام."],
+["He asked whether I had already finished reading the entire book.","سأل إذا كنت خلصت قراءة الكتاب كله.","\"Whether I had finished\" = إذا كنت خلصت."],
+["My friend said that she couldn't come because she wasn't feeling well.","صاحبتي قالت ما بتقدر تيجي لأنها مش حاسة حالها منيحة.","can't → couldn't بنقل الكلام."],
+["The principal announced that the school would be implementing new rules.","المدير أعلن إنو المدرسة رح تطبق قوانين جديدة.","\"Implementing\" = تطبق. \"Announced\" = أعلن."],
+["She wondered aloud if her English was improving fast enough.","تساءلت بصوت عالي إذا إنجليزيتها عم تتحسن بالسرعة الكافية.","\"Wondered\" = تساءلت. \"Aloud\" = بصوت عالي."],
+["He explained that the entire process would take approximately two weeks.","شرح إنو العملية كلها رح تاخد حوالي أسبوعين.","\"Approximately\" = حوالي/تقريباً."],
+["My neighbor told me that she was planning to move to another city.","جارتي قالتلي إنها ناوية تنتقل لمدينة تانية.","\"Was planning to\" = كانت ناوية."],
+["The receptionist asked if I had a previously scheduled appointment.","موظفة الاستقبال سألت إذا عندي موعد محجوز من قبل.","\"Previously scheduled\" = محجوز من قبل."],
+["She admitted that she had made several mistakes on the application form.","اعترفت إنها غلطت بكذا شي بنموذج الطلب.","\"Admitted\" = اعترفت. \"Several\" = كذا/عدة."],
+["He promised that he would always be there to help me practice English.","وعدني إنو رح يكون دايماً موجود يساعدني أتمرن إنجليزي.","\"Promised\" = وعد. وعد مع would."],
+["My daughter told me excitedly that she wanted to learn how to swim.","بنتي قالتلي بحماس إنها بدها تتعلم سباحة.","\"Excitedly\" = بحماس."],
+["The mechanic informed us that the car needed new brakes immediately.","الميكانيكي أخبرنا إنو السيارة بدها فرامل جديدة فوراً.","\"Informed\" = أخبر. رسمية أكتر من told."],
+["She asked me how long I had been living in the United States.","سألتني قديش صارلي ساكنة بأمريكا.","\"How long had I been living\" = قديش صارلي."],
+["He mentioned casually that the prices had gone up significantly.","ذكر بشكل عابر إنو الأسعار طلعت بشكل ملحوظ.","\"Casually\" = بشكل عابر. \"Significantly\" = بشكل ملحوظ."],
+["My husband said that he would pick up the children from practice today.","زوجي قال إنو رح يوخد الولاد من التمرين اليوم.","will → would بنقل الكلام."],
+["The landlord informed us officially that the rent would increase next month.","صاحب البيت أخبرنا رسمياً إنو الإيجار رح يزيد الشهر الجاي.","\"Officially\" = رسمياً. \"Increase\" = يزيد."],
+["She told me reassuringly not to worry about making small grammar mistakes.","قالتلي بطمأنة لا تقلقي من الأغلاط الصغيرة بالقواعد.","\"Reassuringly\" = بطمأنة. نصيحة محفزة!"],
+["He asked if I could recommend a good family-friendly restaurant nearby.","سأل إذا فيني أنصح بمطعم منيح للعائلات قريب.","\"Family-friendly\" = مناسب للعائلات."],
+["My son told me proudly that he had scored the winning goal in the game.","ابني قالي بفخر إنو سجل هدف الفوز بالمباراة.","\"Proudly\" = بفخر. \"Winning goal\" = هدف الفوز."],
+["The pharmacist advised me to always take this medication with food.","الصيدلاني نصحني دايماً آخد هالدوا مع أكل.","\"Advised\" = نصح. نقل نصيحة."],
+["She confessed that she sometimes misses her old life back in Jordan.","اعترفت إنها أحياناً بتشتاق لحياتها القديمة بالأردن.","\"Confessed\" = اعترفت. مشاعر عميقة."],
+["He suggested enthusiastically that we should try the new restaurant downtown.","اقترح بحماس إنو لازم نجرب المطعم الجديد بوسط البلد.","\"Suggested\" = اقترح. \"Enthusiastically\" = بحماس."],
+["My friend asked if I would be interested in joining her weekly yoga class.","صاحبتي سألت إذا بهمني أنضم لصف اليوغا الأسبوعي تبعها.","\"Would be interested in\" = بهمني. \"Weekly\" = أسبوعي."],
+// Month 4: Phrasal Verbs (30)
+["I need to look up this word because I have never seen it before.","لازم أدور على هالكلمة لأني ما شفتها قبل هيك.","\"Look up\" = دوّر على (بالقاموس). فعل مركب."],
+["Can you please turn down the music? I am trying to study.","ممكن تخففي الموسيقى؟ عم بحاول أدرس.","\"Turn down\" = خفف (الصوت). أو ارفض (عرض)."],
+["We completely ran out of milk, so I need to stop by the store.","خلص الحليب عنا بالكامل، فلازم أمر عالدكانة.","\"Ran out of\" = خلص. \"Stop by\" = أمر على."],
+["She finally figured out how to solve the complicated math problem.","أخيراً فهمت كيف تحل مسألة الرياضيات المعقدة.","\"Figured out\" = فهمت/اكتشفت."],
+["I am really looking forward to seeing you at the party this weekend.","كتير متحمسة أشوفك بالحفلة هالويكند.","\"Looking forward to\" + verb+ing = متحمس لـ."],
+["He turned down the job offer because the salary was way too low.","رفض عرض الشغل لأنو المعاش كان واطي كتير.","\"Turned down\" هون = رفض. \"Way too low\" = واطي كتير."],
+["I really need to catch up on all the work I missed while I was sick.","فعلاً لازم ألحق كل الشغل اللي فاتني وأنا مريضة.","\"Catch up on\" = ألحق/أعوض."],
+["She grew up in a small, peaceful town near the Jordanian border.","كبرت بقرية صغيرة هادية قريبة من الحدود الأردنية.","\"Grew up\" = كبرت. grow up = يكبر."],
+["We need to come up with a creative plan for the school fundraiser.","لازم نطلع بخطة مبدعة لحملة جمع التبرعات بالمدرسة.","\"Come up with\" = نطلع بـ/نبتكر. \"Fundraiser\" = جمع تبرعات."],
+["He always drops off the kids at school on his way to the office.","دايماً بينزل الولاد عالمدرسة وهو رايح عالمكتب.","\"Drops off\" = ينزل. \"On his way to\" = وهو رايح."],
+["I simply cannot put up with this constant noise from the construction.","ما بقدر أتحمل هالضجة المستمرة من البناء.","\"Put up with\" = أتحمل. فعل مركب مهم."],
+["She randomly ran into her old college friend at the grocery store.","صادفت صاحبتها القديمة من الجامعة بالسوبرماركت.","\"Ran into\" = صادفت. لقاء عشوائي."],
+["We definitely need to cut down on our spending before the holidays.","أكيد لازم نخفف مصاريفنا قبل الأعياد.","\"Cut down on\" = خفف من."],
+["He unfortunately broke down crying when he heard the devastating news.","للأسف انهار وبكى لما سمع الخبر المدمر.","\"Broke down\" = انهار. \"Devastating\" = مدمر."],
+["Don't worry, I will pick you up from the airport when your flight arrives.","لا تقلقي، رح آخدك من المطار لما توصل رحلتك.","\"Pick up\" = آخد/أقلّ."],
+["My daughter really takes after her grandmother in so many beautiful ways.","بنتي فعلاً طالعة على ستها بكتير أشياء حلوة.","\"Takes after\" = طالعة على. تشابه عائلي."],
+["We still need to set up the entire room before the guests arrive tonight.","لسا لازم نجهز الغرفة كلها قبل ما يوصلوا الضيوف الليلة.","\"Set up\" = جهّز/رتّب."],
+["He bravely gave up smoking three years ago and has never looked back.","بشجاعة ترك التدخين من تلات سنين وما رجعله.","\"Gave up\" = ترك. \"Never looked back\" = ما ندم."],
+["I am seriously counting on you to help me prepare for the interview.","فعلاً معتمدة عليكي تساعديني أتحضر للمقابلة.","\"Counting on\" = معتمد على."],
+["She brought up a really interesting point during yesterday's discussion.","طرحت نقطة كتير مثيرة خلال نقاش مبارح.","\"Brought up\" = طرحت (موضوع)."],
+["It is very important that we learn to get along with all our neighbors.","كتير مهم نتعلم نتفاهم مع كل جيراننا.","\"Get along with\" = نتفاهم مع."],
+["His beloved grandfather sadly passed away peacefully in his sleep last night.","جده الحبيب توفى بسلام بنومه مبارح بالليل.","\"Passed away\" = توفى. تعبير مهذب عن الموت."],
+["I thoroughly looked into several different options before making my final decision.","بحثت بكل الخيارات المختلفة قبل ما آخد قراري النهائي.","\"Looked into\" = بحثت. \"Thoroughly\" = بشكل شامل."],
+["She cleverly pointed out that we had completely forgotten to lock the back door.","نبهتنا بذكاء إننا نسينا بالكامل نسكر الباب الخلفي.","\"Pointed out\" = نبهت/أشارت."],
+["We actually ended up going to a completely different restaurant than planned.","بالآخر رحنا على مطعم مختلف تماماً عن اللي كنا ناويين.","\"Ended up\" = بالآخر/بالنهاية."],
+["He always puts off doing his homework until the very last possible minute.","دايماً بأجل وظايفه لآخر لحظة ممكنة.","\"Puts off\" = بأجل. \"Procrastinate\" نفس المعنى."],
+["I really need to work out at least three times a week to stay healthy.","فعلاً لازم أتمرن على الأقل تلات مرات بالأسبوع لأضل بصحة.","\"Work out\" = أتمرن."],
+["She actually turned out to be one of the most wonderful friends I have ever had.","طلعت بالآخر من أحلى الأصحاب اللي كان عندي بحياتي.","\"Turned out to be\" = طلعت/تبين إنها."],
+["Despite the terrible weather, we bravely carried on with all of our outdoor plans.","رغم الجو السيء، كملنا بشجاعة كل خططنا برا.","\"Carried on\" = كملنا/استمرينا."],
+["The children need to clean up their rooms before they are allowed to watch any TV.","الولاد لازم يرتبوا غرفهم قبل ما ينسمحلهم يتفرجوا تلفزيون.","\"Clean up\" = رتّب/نظّف."],
+// Month 5: Workplace (31)
+["I have an important job interview next week and I am quite nervous about it.","عندي مقابلة شغل مهمة الأسبوع الجاي ومتوترة شوي منها.","\"Quite nervous\" = متوترة شوي. \"Job interview\" = مقابلة شغل."],
+["Could you please tell me more about the responsibilities of this position?","ممكن تحكيلي أكتر عن مسؤوليات هالوظيفة؟","\"Responsibilities\" = مسؤوليات. \"Position\" = وظيفة."],
+["I have five years of experience working in customer service and retail.","عندي خمس سنين خبرة بخدمة الزبائن والبيع.","\"Experience\" = خبرة. \"Customer service\" = خدمة زبائن."],
+["My coworker offered to help me learn the new computer system at work.","زميلتي بالشغل عرضت تساعدني أتعلم نظام الكمبيوتر الجديد.","\"Coworker\" = زميل/ة بالشغل."],
+["I would like to apply for the part-time position that was advertised online.","بدي أقدم على الوظيفة بنص دوام اللي نزلت أونلاين.","\"Apply for\" = أقدم على. \"Advertised\" = معلن عنها."],
+["The company offers excellent health insurance benefits to all employees.","الشركة بتقدم تأمين صحي ممتاز لكل الموظفين.","\"Benefits\" = ميزات/فوائد. \"Employees\" = موظفين."],
+["I need to ask my supervisor for permission to take next Friday off.","لازم أستأذن مديري آخد يوم الجمعة الجاي عطلة.","\"Supervisor\" = مدير مباشر. \"Permission\" = إذن."],
+["She was promoted to assistant manager because of her exceptional work ethic.","ترقت لمساعدة مدير بسبب أخلاقها المهنية المتميزة.","\"Work ethic\" = أخلاق مهنية. \"Exceptional\" = متميز."],
+["The training session will cover all the basic procedures you need to know.","جلسة التدريب رح تغطي كل الإجراءات الأساسية اللي لازم تعرفيها.","\"Training session\" = جلسة تدريب. \"Procedures\" = إجراءات."],
+["I submitted my resume and cover letter for the teaching assistant position.","سلمت سيرتي الذاتية ورسالة التقديم لوظيفة مساعد معلم.","\"Resume\" = سيرة ذاتية. \"Cover letter\" = رسالة تقديم."],
+["My boss told me that I did an excellent job on the presentation yesterday.","مديري قلي إني عملت شغل ممتاز بالعرض مبارح.","\"Presentation\" = عرض تقديمي. مدح من المدير!"],
+["We have a mandatory staff meeting every Monday morning at nine o'clock.","عنا اجتماع إلزامي للموظفين كل إثنين الصبح الساعة تسعة.","\"Mandatory\" = إلزامي. \"Staff meeting\" = اجتماع موظفين."],
+["I need to fill out the direct deposit form so I can get paid electronically.","لازم أعبي نموذج الإيداع المباشر حتى يوصلني معاشي إلكترونياً.","\"Direct deposit\" = إيداع مباشر. طريقة الدفع بأمريكا."],
+["She took a professional development course to improve her management skills.","أخذت كورس تطوير مهني لتحسن مهاراتها الإدارية.","\"Professional development\" = تطوير مهني."],
+["The workplace has a strict policy against any form of harassment or discrimination.","مكان الشغل عنده سياسة صارمة ضد أي شكل من التحرش أو التمييز.","\"Harassment\" = تحرش. \"Discrimination\" = تمييز."],
+["I asked my employer if they could adjust my schedule around my children's school hours.","سألت صاحب الشغل إذا ممكن يعدل جدولي حسب ساعات مدرسة ولادي.","\"Adjust my schedule\" = يعدل جدولي. طلب مهم للأمهات."],
+["He works the night shift at the hospital and sleeps during the day.","بشتغل الدوام الليلي بالمستشفى وبنام بالنهار.","\"Night shift\" = دوام ليلي. \"Day shift\" = دوام نهاري."],
+["The company provides two weeks of paid vacation per year for new employees.","الشركة بتعطي أسبوعين إجازة مدفوعة بالسنة للموظفين الجدد.","\"Paid vacation\" = إجازة مدفوعة."],
+["I learned how to write a professional email by watching online tutorials.","تعلمت كيف أكتب إيميل مهني من فيديوهات تعليمية أونلاين.","\"Professional email\" = إيميل مهني. مهارة مهمة!"],
+["My manager appreciates that I always arrive on time and complete my tasks efficiently.","مديري بقدر إني دايماً بوصل بالوقت وبخلص مهامي بكفاءة.","\"Efficiently\" = بكفاءة. \"Appreciates\" = بقدر."],
+["She started her own small business selling homemade food to the local community.","فتحت مشروعها الصغير تبيع أكل بيتي للمجتمع المحلي.","\"Small business\" = مشروع صغير. \"Homemade\" = بيتي."],
+["I am looking for a flexible job that allows me to work from home two days a week.","عم بدور على شغل مرن يخليني أشتغل من البيت يومين بالأسبوع.","\"Flexible\" = مرن. \"Work from home\" = شغل من البيت."],
+["The orientation for new employees includes a tour of the building and safety training.","التوجيه للموظفين الجدد بيتضمن جولة بالمبنى وتدريب سلامة.","\"Orientation\" = توجيه. أول يوم بالشغل."],
+["He was laid off from his job last month, but he is already interviewing at new companies.","انطرد من شغله الشهر الماضي، بس هلق عم يعمل مقابلات بشركات جديدة.","\"Laid off\" = انطرد (مش بسبب غلط). \"Interviewing\" = عم يعمل مقابلات."],
+["I always make sure to separate my personal life from my professional responsibilities.","دايماً بتأكد أفصل حياتي الشخصية عن مسؤولياتي المهنية.","\"Separate\" = أفصل. توازن مهم."],
+["The company is currently hiring bilingual employees who can speak English and Spanish.","الشركة هلق عم توظف موظفين ثنائيي اللغة بيحكوا إنجليزي وإسباني.","\"Bilingual\" = ثنائي اللغة. \"Currently hiring\" = هلق عم توظف."],
+["She received a raise after consistently exceeding her quarterly sales targets.","حصلت على زيادة بعد ما تجاوزت أهداف المبيعات الفصلية باستمرار.","\"Raise\" = زيادة بالمعاش. \"Exceeding\" = تجاوز."],
+["I need to complete my online compliance training before the end of this quarter.","لازم أخلص تدريب الامتثال الأونلاين قبل نهاية هالفصل.","\"Compliance training\" = تدريب الامتثال. مطلوب بكل شركة."],
+["The best advice I ever received was to never stop learning new things at any age.","أحسن نصيحة حصلت عليها إني ما أوقف أتعلم أشياء جديدة بأي عمر.","نصيحة مهنية مهمة!"],
+["Being able to speak multiple languages is a huge advantage in today's job market.","القدرة على حكي عدة لغات ميزة كبيرة بسوق العمل اليوم.","\"Advantage\" = ميزة. \"Job market\" = سوق العمل."],
+// Month 6: Housing (30)
+["We are thinking about buying our first home instead of continuing to rent.","عم نفكر نشتري أول بيت إلنا بدل ما نضل نأجر.","\"Instead of\" = بدل ما. قرار كبير!"],
+["The landlord agreed to fix the leaking faucet in the kitchen by tomorrow.","صاحب البيت وافق يصلح الحنفية اللي عم تنقط بالمطبخ لبكرا.","\"Leaking faucet\" = حنفية عم تنقط."],
+["We need to schedule a home inspection before we sign the purchase agreement.","لازم نحجز فحص للبيت قبل ما نوقع عقد الشراء.","\"Home inspection\" = فحص البيت. مهم جداً قبل الشراء!"],
+["Our lease expires at the end of June, so we need to decide if we want to renew.","عقد إيجارنا بينتهي آخر حزيران، فلازم نقرر إذا بدنا نجدد.","\"Lease expires\" = عقد الإيجار بينتهي."],
+["The neighbors complained about the noise from our children playing in the backyard.","الجيران اشتكوا من الضجة من ولادنا وهم يلعبوا بالحديقة الخلفية.","\"Complained about\" = اشتكوا من. \"Backyard\" = حديقة خلفية."],
+["I called a plumber to fix the clogged drain in the bathroom sink.","اتصلت بسباك يصلح البالوعة المسدودة بمجلى الحمام.","\"Plumber\" = سباك. \"Clogged drain\" = بالوعة مسدودة."],
+["The homeowner's association has strict rules about parking and lawn maintenance.","جمعية أصحاب البيوت عندها قوانين صارمة عن الصف وصيانة الحديقة.","\"HOA\" = جمعية أصحاب البيوت. شائعة بأمريكا."],
+["We decided to paint the living room a lighter color to make it feel more spacious.","قررنا ندهن غرفة الجلوس لون أفتح حتى تحس أوسع.","\"Spacious\" = واسع. \"Lighter color\" = لون أفتح."],
+["The real estate agent showed us five different houses in our price range yesterday.","وكيل العقارات فرجانا خمس بيوت مختلفة بمجال سعرنا مبارح.","\"Real estate agent\" = وكيل عقارات. \"Price range\" = مجال السعر."],
+["I need to call an electrician because several of the outlets have stopped working.","لازم أتصل بكهربائي لأنو كذا فيشة وقفت تشتغل.","\"Electrician\" = كهربائي. \"Outlets\" = فيشات كهرباء."],
+["The mortgage payment is due on the first of every month without exception.","قسط الرهن العقاري لازم يندفع أول كل شهر بدون استثناء.","\"Mortgage\" = رهن عقاري. أهم كلمة لشراء بيت بأمريكا."],
+["We installed a security camera at the front door for our family's peace of mind.","ركبنا كاميرا مراقبة عالباب الأمامي لراحة بال عيلتنا.","\"Security camera\" = كاميرا مراقبة. \"Peace of mind\" = راحة بال."],
+["The apartment complex has a swimming pool, a gym, and a playground for children.","مجمع الشقق فيه مسبح ونادي رياضة وملعب للأطفال.","\"Apartment complex\" = مجمع شقق. \"Amenities\" = مرافق."],
+["Our water heater broke down last night, so we had to take cold showers this morning.","سخان المي خرب مبارح بالليل، فاضطرينا نستحمي بارد هالصبح.","\"Water heater\" = سخان مي. \"Broke down\" = خرب."],
+["She organized a neighborhood watch program to keep the community safe and connected.","نظمت برنامج مراقبة حي حتى يضل المجتمع آمن ومتواصل.","\"Neighborhood watch\" = مراقبة الحي. برنامج أمان مجتمعي."],
+["The property tax bill arrived and it was much higher than we had originally expected.","فاتورة ضريبة العقار وصلت وكانت أعلى بكتير مما كنا متوقعين.","\"Property tax\" = ضريبة عقار. مهمة لأصحاب البيوت."],
+["We had to evacuate the building temporarily because the fire alarm went off unexpectedly.","اضطرينا نخلي المبنى مؤقتاً لأنو إنذار الحريق انطلق فجأة.","\"Evacuate\" = نخلي/نطلع. \"Fire alarm\" = إنذار حريق."],
+["The garbage collection in our neighborhood happens every Tuesday and Friday morning.","جمع الزبالة بحينا بيصير كل ثلاثاء وجمعة الصبح.","\"Garbage collection\" = جمع الزبالة."],
+["I love our new neighborhood because it is very walkable and close to good schools.","بحب حينا الجديد لأنو ممكن تمشي فيه وقريب من مدارس منيحة.","\"Walkable\" = ممكن تمشي فيه. ميزة مهمة!"],
+["We are saving up to renovate the kitchen and add a small island in the center.","عم نوفر لنجدد المطبخ ونضيف جزيرة صغيرة بالنص.","\"Renovate\" = جدد. \"Kitchen island\" = جزيرة مطبخ."],
+["The tenant upstairs plays loud music late at night and it is really affecting our sleep.","المستأجر فوق بيسمع موسيقى عالية بالليل وفعلاً عم تأثر على نومنا.","\"Tenant\" = مستأجر. \"Affecting\" = عم تأثر."],
+["We finally moved into our own house after renting apartments for over seven years.","أخيراً انتقلنا لبيتنا الخاص بعد ما أجرنا شقق لأكتر من سبع سنين.","\"Moved into\" = انتقلنا لـ. إنجاز كبير!"],
+["The basement sometimes floods during heavy rainstorms, so we need to waterproof it.","القبو أحياناً بيغرق وقت العواصف القوية، فلازم نعزله ضد المي.","\"Basement\" = قبو. \"Waterproof\" = عزل ضد المي."],
+["I joined the neighborhood Facebook group to stay informed about local events and news.","انضميت لمجموعة فيسبوك الحي حتى أضل مطلعة على الأحداث والأخبار المحلية.","\"Stay informed\" = أضل مطلعة."],
+["We planted a vegetable garden in the backyard and now we grow our own tomatoes and herbs.","زرعنا حديقة خضرا بالخلف وهلق بنزرع بندورتنا وأعشابنا.","\"Vegetable garden\" = حديقة خضرا. \"Herbs\" = أعشاب."],
+["The HOA sent us a warning letter because our grass was too long and needed to be mowed.","الـ HOA بعتتلنا رسالة تحذير لأنو العشب كان طويل ولازم ينقص.","\"Mowed\" = ينقص/يجز (العشب). قوانين الـ HOA صارمة!"],
+["Living in a diverse neighborhood has helped my children learn about different cultures.","العيش بحي متنوع ساعد ولادي يتعلموا عن ثقافات مختلفة.","\"Diverse\" = متنوع. ميزة مهمة!"],
+["We always make an effort to be friendly and helpful to everyone in our neighborhood.","دايماً بنحاول نكون ودودين ومفيدين لكل حدا بحينا.","\"Make an effort\" = نحاول/نبذل جهد."],
+["The monthly utility bills including electricity, gas, water, and internet total about three hundred dollars.","فواتير الخدمات الشهرية مع الكهرباء والغاز والمي والإنترنت بتطلع حوالي تلتمية دولار.","\"Utility bills\" = فواتير خدمات. ميزانية مهمة."],
+// Month 7: Legal & Government (31)
+["I need to renew my driver's license at the DMV before it expires next month.","لازم أجدد رخصة السواقة من الـ DMV قبل ما تنتهي الشهر الجاي.","\"DMV\" = إدارة المركبات. \"Expires\" = تنتهي."],
+["You have the right to request a professional interpreter during any government appointment.","عندك الحق تطلبي مترجم محترف خلال أي موعد حكومي.","\"Interpreter\" = مترجم (شفهي). \"Right\" = حق."],
+["The immigration lawyer explained all the steps required for the citizenship application.","محامي الهجرة شرح كل الخطوات المطلوبة لطلب الجنسية.","\"Citizenship\" = جنسية. \"Application\" = طلب."],
+["I need to get a certified copy of my birth certificate from the vital records office.","لازم أجيب نسخة مصدقة من شهادة ميلادي من مكتب السجلات.","\"Certified copy\" = نسخة مصدقة. \"Birth certificate\" = شهادة ميلاد."],
+["All residents are required by law to carry valid identification at all times.","كل السكان ملزمين بالقانون يحملوا هوية سارية بكل الأوقات.","\"Required by law\" = ملزمين بالقانون."],
+["She passed her citizenship test and will be sworn in as an American citizen next month.","نجحت بامتحان الجنسية ورح تحلف اليمين كمواطنة أمريكية الشهر الجاي.","\"Sworn in\" = تحلف اليمين. يوم مهم جداً!"],
+["I received a jury duty summons and I am required to appear at the courthouse on Monday.","وصلني استدعاء لواجب المحلفين ولازم أحضر للمحكمة يوم الإثنين.","\"Jury duty\" = واجب المحلفين. إلزامي بأمريكا."],
+["The speed limit on this road is thirty-five miles per hour, so please slow down.","حد السرعة على هالطريق ٣٥ ميل بالساعة، فلو سمحتي هدّي.","\"Speed limit\" = حد السرعة. \"Miles per hour\" = ميل بالساعة."],
+["We need to file a police report because someone broke into our car last night.","لازم نقدم بلاغ للشرطة لأنو حدا كسر سيارتنا مبارح بالليل.","\"File a police report\" = قدّم بلاغ. \"Broke into\" = كسر/سرق."],
+["The Social Security office requires you to bring two forms of identification.","مكتب الضمان الاجتماعي بيطلب تجيبي نوعين هوية.","\"Social Security\" = ضمان اجتماعي. مهم بأمريكا."],
+["She hired a lawyer to help her understand her rights as a tenant in this state.","وظفت محامي يساعدها تفهم حقوقها كمستأجرة بهالولاية.","\"Rights\" = حقوق. \"Tenant\" = مستأجر."],
+["You can register to vote online if you are a United States citizen over eighteen.","بتقدري تسجلي للتصويت أونلاين إذا إنتي مواطنة أمريكية فوق الثمنتعش.","\"Register to vote\" = سجّل للتصويت. حق مهم!"],
+["The court date has been postponed to allow more time to gather additional evidence.","موعد المحكمة تأجل حتى يكون في وقت أكتر لجمع أدلة إضافية.","\"Postponed\" = تأجل. \"Evidence\" = أدلة."],
+["I need to update my address on all my official government documents immediately.","لازم أحدّث عنواني على كل أوراقي الرسمية الحكومية فوراً.","\"Official documents\" = أوراق رسمية."],
+["The city council voted to approve the construction of a new community center nearby.","مجلس المدينة صوّت لقبول بناء مركز مجتمعي جديد قريب.","\"City council\" = مجلس المدينة. \"Approved\" = وافق."],
+["If you receive a traffic ticket, you can either pay the fine or contest it in court.","إذا وصلتك مخالفة سير، بتقدري تدفعي الغرامة أو تعترضي عليها بالمحكمة.","\"Traffic ticket\" = مخالفة. \"Fine\" = غرامة. \"Contest\" = تعترض."],
+["The notary public at the bank can officially certify your signature on legal documents.","الكاتب العدل بالبنك بقدر يصادق رسمياً على توقيعك على الأوراق القانونية.","\"Notary public\" = كاتب عدل. خدمة مهمة."],
+["We attended a free legal clinic that helps immigrants understand their basic rights.","حضرنا عيادة قانونية مجانية بتساعد المهاجرين يفهموا حقوقهم الأساسية.","\"Legal clinic\" = عيادة قانونية. مصدر مفيد!"],
+["The landlord cannot legally enter your apartment without giving proper advance notice.","صاحب البيت ما بقدر قانونياً يدخل شقتك بدون ما يعطيك إشعار مسبق.","\"Advance notice\" = إشعار مسبق. حقك كمستأجرة!"],
+["I passed the written portion of the driving test but still need to take the road test.","نجحت بالجزء الكتابي من امتحان السواقة بس لسا لازم آخد امتحان الطريق.","\"Written portion\" = جزء كتابي. \"Road test\" = امتحان طريق."],
+["The public library offers free classes on understanding your rights as a resident.","المكتبة العامة بتقدم صفوف مجانية عن فهم حقوقك كمقيم.","\"Public library\" = مكتبة عامة. مصدر ممتاز!"],
+["Emergency services can be reached by dialing nine-one-one from any phone at any time.","خدمات الطوارئ بتوصلها بالاتصال على ٩١١ من أي تلفون بأي وقت.","\"911\" = رقم الطوارئ بأمريكا. مهم جداً تعرفيه!"],
+["The process of becoming a United States citizen includes an English test and a civics exam.","عملية الحصول على الجنسية الأمريكية بتتضمن امتحان إنجليزي وامتحان تربية مدنية.","\"Civics exam\" = امتحان تربية مدنية."],
+["You should always keep copies of all important legal documents in a secure location.","دايماً لازم تحتفظي بنسخ عن كل الأوراق القانونية المهمة بمكان آمن.","نصيحة مهمة جداً!"],
+["The Equal Employment Opportunity Commission protects workers from workplace discrimination.","لجنة تكافؤ الفرص بتحمي العمال من التمييز بمكان العمل.","\"EEOC\" = لجنة تكافؤ الفرص. حماية مهمة."],
+["I need to schedule an appointment at the embassy to get my passport renewed before traveling.","لازم أحجز موعد بالسفارة حتى أجدد جوازي قبل السفر.","\"Embassy\" = سفارة."],
+["The Americans with Disabilities Act ensures that public places are accessible to everyone.","قانون ذوي الاحتياجات الخاصة بيضمن إنو الأماكن العامة متاحة للجميع.","\"ADA\" = قانون مهم. \"Accessible\" = متاح."],
+["Understanding your basic legal rights is essential for protecting yourself and your family.","فهم حقوقك القانونية الأساسية ضروري لحماية حالك وعيلتك.","\"Essential\" = ضروري. خلاصة مهمة!"],
+["Every person in the United States has the right to remain silent if questioned by the police.","كل شخص بأمريكا عنده الحق يسكت إذا الشرطة سألوه.","\"Right to remain silent\" = حق الصمت."],
+["The Constitution guarantees freedom of speech, religion, and the press to all people.","الدستور بيضمن حرية التعبير والدين والصحافة لكل الناس.","\"Constitution\" = دستور. \"Freedom\" = حرية."],
+// Month 8: Parenting (31)
+["My pediatrician recommended limiting screen time to one hour per day for young children.","دكتور الأطفال نصح نخفف وقت الشاشة لساعة باليوم للأطفال الصغار.","\"Screen time\" = وقت الشاشة. \"Limiting\" = تخفيف."],
+["I always try to encourage my children to express their feelings openly and honestly.","دايماً بحاول أشجع ولادي يعبروا عن مشاعرهم بصراحة وأمانة.","\"Express feelings\" = يعبروا عن مشاعرهم."],
+["The school counselor suggested that my son might benefit from after-school tutoring.","مرشدة المدرسة اقترحت إنو ابني ممكن يستفيد من دروس خصوصية بعد المدرسة.","\"Counselor\" = مرشد/ة. \"Tutoring\" = دروس خصوصية."],
+["I enrolled my daughter in a summer camp that focuses on arts, crafts, and outdoor activities.","سجلت بنتي بمخيم صيفي بيركز على الفنون والأشغال اليدوية والنشاطات الخارجية.","\"Summer camp\" = مخيم صيفي. نشاط شائع بأمريكا."],
+["Teaching children to be bilingual gives them a significant advantage in school and in life.","تعليم الأطفال يحكوا لغتين بيعطيهم ميزة كبيرة بالمدرسة وبالحياة.","\"Bilingual\" = ثنائي اللغة. فخر!"],
+["We established a consistent bedtime routine that includes reading a story together every night.","عملنا روتين نوم ثابت بيتضمن قراءة قصة سوا كل ليلة.","\"Consistent routine\" = روتين ثابت. مهم للأطفال."],
+["My son struggled with making friends at first, but he eventually found a wonderful group.","ابني واجه صعوبة بتكوين صداقات بالأول، بس بالآخر لقى مجموعة رائعة.","\"Struggled with\" = واجه صعوبة. \"Eventually\" = بالآخر."],
+["I believe it is important to teach children about their cultural heritage and family traditions.","بآمن إنو مهم نعلم الأطفال عن تراثهم الثقافي وتقاليد عيلتهم.","\"Cultural heritage\" = تراث ثقافي. \"Traditions\" = تقاليد."],
+["The teacher recommended several excellent books that I can read with my children at home.","المعلمة نصحت بعدة كتب ممتازة فيني أقرأهم مع ولادي بالبيت.","\"Recommended\" = نصحت. قراءة مهمة!"],
+["We try to eat dinner together as a family at least five nights out of every week.","بنحاول نتعشى سوا كعيلة على الأقل خمس ليالي بالأسبوع.","\"As a family\" = كعيلة. عادة مهمة!"],
+["I had to explain to my child why some families look different from ours and that is perfectly okay.","اضطريت أشرح لابني ليش بعض العائلات مختلفة عن عيلتنا وهاد شي عادي.","\"Perfectly okay\" = عادي تماماً. حوار مهم."],
+["The school nurse called to tell me that my daughter has a slight fever and needs to be picked up.","ممرضة المدرسة اتصلت تقولي إنو بنتي عندها حرارة خفيفة ولازم آخدها.","\"School nurse\" = ممرضة المدرسة."],
+["We created a chore chart so each child knows exactly what their responsibilities are every week.","عملنا جدول مهام حتى كل ولد يعرف بالزبط شو مسؤولياته كل أسبوع.","\"Chore chart\" = جدول مهام. أداة تربوية ممتازة."],
+["My children attend Arabic school on Saturdays so they can learn to read and write in our language.","ولادي بيروحوا مدرسة عربية يوم السبت حتى يتعلموا يقرأوا ويكتبوا بلغتنا.","\"Arabic school\" = مدرسة عربية. الحفاظ على اللغة!"],
+["I spoke with the school psychologist about strategies to help my child manage test anxiety.","حكيت مع أخصائي نفسي المدرسة عن استراتيجيات تساعد ابني يتعامل مع قلق الامتحانات.","\"Test anxiety\" = قلق الامتحانات. مشكلة شائعة."],
+["It is challenging to balance the values we grew up with and the culture our children are growing up in.","صعب نوازن بين القيم اللي تربينا عليها والثقافة اللي ولادنا عم يكبروا فيها.","\"Challenging\" = صعب. \"Balance\" = نوازن. موضوع مهم جداً."],
+["We celebrate both Eid and some American holidays so our children feel connected to both cultures.","بنحتفل بالعيد وبعض الأعياد الأمريكية حتى ولادنا يحسوا مرتبطين بالثقافتين.","\"Connected to\" = مرتبطين بـ."],
+["I encourage my children to try new things even if they are afraid of failing or making mistakes.","بشجع ولادي يجربوا أشياء جديدة حتى لو خايفين يفشلوا أو يغلطوا.","\"Afraid of failing\" = خايفين يفشلوا. تشجيع مهم!"],
+["The parent support group at our mosque has been incredibly helpful for our family's adjustment.","مجموعة دعم الأهل بجامعنا كانت مفيدة بشكل لا يصدق لتأقلم عيلتنا.","\"Support group\" = مجموعة دعم. \"Adjustment\" = تأقلم."],
+["I always tell my children that being kind and respectful is more important than being the smartest.","دايماً بقول لولادي إنو يكونوا لطيفين ومحترمين أهم من يكونوا الأذكى.","نصيحة تربوية جميلة!"],
+["We started a family tradition of cooking a different cultural dish together every Sunday afternoon.","بلشنا تقليد عائلي إنو نطبخ أكلة من ثقافة مختلفة سوا كل أحد بعد الظهر.","\"Family tradition\" = تقليد عائلي."],
+["My daughter asked me to volunteer as a chaperone for her class field trip to the science museum.","بنتي طلبت مني أتطوع كمرافقة لرحلة صفها لمتحف العلوم.","\"Chaperone\" = مرافق/ة. \"Volunteer\" = تطوع."],
+["Raising children who are proud of both their Arab identity and American life is my greatest goal.","تربية أطفال فخورين بهويتهم العربية وحياتهم الأمريكية هو أكبر هدف عندي.","\"Identity\" = هوية. هدف نبيل!"],
+["I learned that positive reinforcement works much better than punishment for changing behavior.","تعلمت إنو التعزيز الإيجابي بيشتغل أحسن بكتير من العقاب لتغيير السلوك.","\"Positive reinforcement\" = تعزيز إيجابي. أسلوب تربوي فعال."],
+["The school offers a free breakfast and lunch program for families who qualify financially.","المدرسة بتقدم برنامج فطور وغدا مجاني للعائلات المؤهلة مالياً.","\"Free lunch program\" = برنامج غدا مجاني. مساعدة مهمة."],
+["We make it a point to speak Arabic at home so our children don't lose their mother tongue.","بنحرص نحكي عربي بالبيت حتى ولادنا ما يخسروا لغتهم الأم.","\"Mother tongue\" = لغة أم. \"Make it a point\" = نحرص."],
+["It takes a village to raise a child, and I am grateful for every person in our community.","بده قرية كاملة يربي طفل، وأنا ممتنة لكل شخص بمجتمعنا.","مثل شائع: \"It takes a village.\" حكمة عميقة!"],
+["My son's teacher praised him for helping a new student who didn't speak English feel welcome.","معلمة ابني مدحته لأنو ساعد طالب جديد ما بيحكي إنجليزي يحس بالترحيب.","\"Praised\" = مدحت. \"Feel welcome\" = يحس بالترحيب. لحظة فخر!"],
+["I worry about my children's safety online, so we have strict rules about internet usage.","بقلق على سلامة ولادي أونلاين، فعنا قوانين صارمة عن استخدام الإنترنت.","\"Online safety\" = سلامة أونلاين."],
+["The most rewarding part of parenting is watching your children grow into kind, confident people.","أحلى شي بالتربية هو إنك تشوفي ولادك يكبروا ويصيروا ناس طيبين وواثقين.","\"Rewarding\" = مجزي. \"Confident\" = واثقين."],
+["Every challenge we face as parents is an opportunity to teach our children resilience and strength.","كل تحدي بنواجهه كأهل هو فرصة نعلم ولادنا المرونة والقوة.","\"Resilience\" = مرونة/صمود. \"Strength\" = قوة."],
+// Month 9: Idioms (30)
+["Don't put all your eggs in one basket; always have a backup plan just in case.","لا تحطي كل بيضاتك بسلة وحدة؛ دايماً خلي عندك خطة بديلة.","\"Don't put all your eggs in one basket\" = لا تعتمدي على شي واحد بس."],
+["Learning English is not a piece of cake, but you are doing an amazing job so far.","تعلم الإنجليزي مش سهل، بس إنتي عم تعملي شغل رائع للحين.","\"Piece of cake\" = شي سهل. العكس: \"not a piece of cake\"."],
+["She has been feeling under the weather lately, so she decided to see her doctor.","من فترة حاسة حالها مش منيحة، فقررت تروح عالدكتور.","\"Under the weather\" = مش منيح/مريض شوي."],
+["I know moving to a new country is hard, but every cloud has a silver lining.","بعرف الانتقال لبلد جديد صعب، بس كل غيمة وراها شمس.","\"Every cloud has a silver lining\" = كل محنة وراها منحة."],
+["He was on cloud nine when he got accepted into his dream university program.","كان بالسما السابعة لما انقبل ببرنامج جامعة أحلامه.","\"On cloud nine\" = بالسما السابعة. فرح كبير."],
+["We need to bite the bullet and finally start looking for a house to buy.","لازم ناخد القرار الصعب ونبلش ندور على بيت نشتريه.","\"Bite the bullet\" = ناخد القرار الصعب."],
+["The teacher told me that my son is a quick learner and always goes the extra mile.","المعلمة قالتلي إنو ابني بيتعلم بسرعة ودايماً بيعطي أكتر من المطلوب.","\"Goes the extra mile\" = بيعطي أكتر من المطلوب."],
+["I was on the fence about accepting the job, but the benefits convinced me to say yes.","كنت مترددة أقبل الشغل، بس الميزات أقنعتني أقول أيوا.","\"On the fence\" = متردد. مش قادر يقرر."],
+["Let's not beat around the bush; I need to know if you can help me with this or not.","يلا نحكي بصراحة؛ بدي أعرف إذا فيكي تساعديني بهالشي أو لا.","\"Beat around the bush\" = يلف ويدور. العكس: يحكي بصراحة."],
+["She always sees the glass as half full, even when things are not going perfectly well.","هي دايماً بتشوف الكاسة نصها مليانة، حتى لما الأمور مش ماشية تمام.","\"Glass half full\" = تفاؤل. \"Half empty\" = تشاؤم."],
+["Time flies when you are having fun; I can't believe we have been here for five years already.","الوقت بيطير لما تكوني مبسوطة؛ ما بصدق صارلنا هون خمس سنين.","\"Time flies\" = الوقت بيطير."],
+["You should not judge a book by its cover; people are often very different from how they first appear.","ما لازم تحكمي على الكتاب من غلافه؛ الناس غالباً مختلفين عن مظهرهم.","\"Don't judge a book by its cover\" = لا تحكم من المظهر."],
+["I am going to hit the books tonight because I have a very important certification exam tomorrow.","رح أدرس بجد الليلة لأنو عندي امتحان شهادة كتير مهم بكرا.","\"Hit the books\" = أدرس بجد."],
+["After months of hard work, her business is finally starting to get off the ground successfully.","بعد شهور من الشغل الجاد، مشروعها أخيراً عم يبلش ينجح.","\"Get off the ground\" = يبلش ينجح/ينطلق."],
+["We will cross that bridge when we come to it; right now let's focus on the current problem.","رح نحل هالمشكلة لما نوصلها؛ هلق يلا نركز على المشكلة الحالية.","\"Cross that bridge when we come to it\" = نحلها بوقتها."],
+["She really went out of her way to make us feel welcome when we first moved to this neighborhood.","فعلاً بذلت جهد كبير حتى تخلينا نحس بالترحيب لما أول ما انتقلنا لهالحي.","\"Went out of her way\" = بذلت جهد إضافي."],
+["The news about the factory closing was a blessing in disguise because he found a much better job.","خبر إغلاق المصنع كان نعمة متنكرة لأنو لقى شغل أحسن بكتير.","\"Blessing in disguise\" = نعمة متنكرة."],
+["I have been burning the candle at both ends working two jobs, and I really need a vacation.","عم أشتغل فوق طاقتي بوظيفتين، وفعلاً بدي إجازة.","\"Burning the candle at both ends\" = يشتغل فوق طاقته."],
+["Actions speak louder than words, so show your children love through what you do every single day.","الأفعال أقوى من الكلام، فبيّني لولادك حبك من خلال أفعالك كل يوم.","\"Actions speak louder than words\" = الأفعال أبلغ من الكلام."],
+["He let the cat out of the bag and accidentally told everyone about the surprise birthday party.","فضح السر وبالغلط قال لكلشي عن حفلة عيد الميلاد المفاجأة.","\"Let the cat out of the bag\" = فضح السر."],
+["I am trying to kill two birds with one stone by exercising while listening to English podcasts.","عم بحاول أضرب عصفورين بحجر بإني أتمرن وأسمع بودكاست إنجليزي.","\"Kill two birds with one stone\" = ضرب عصفورين بحجر!"],
+["Rome wasn't built in a day, so be patient with yourself as you continue learning English.","روما ما انبنت بيوم، فكوني صبورة مع حالك وإنتي عم تتعلمي إنجليزي.","\"Rome wasn't built in a day\" = الصبر مفتاح النجاح."],
+["She has a heart of gold and always goes above and beyond to help everyone around her.","قلبها ذهب ودايماً بتعمل أكتر من المطلوب لتساعد كل اللي حواليها.","\"Heart of gold\" = قلب ذهب. \"Above and beyond\" = أكتر من المطلوب."],
+["When it rains, it pours; everything seemed to go wrong at the exact same time last month.","المصايب ما بتيجي فرادى؛ كل شي كأنو غلط بنفس الوقت الشهر الماضي.","\"When it rains, it pours\" = المصايب ما بتيجي لحالها."],
+["The early bird catches the worm, so I always try to wake up before everyone else in the house.","اللي ببكر بيلحق، فدايماً بحاول أصحى قبل كلشي بالبيت.","\"The early bird catches the worm\" = اللي ببكر بيلحق."],
+["I told her to hang in there because things always get better with time and patience.","قلتلها تتحملي لأنو الأمور دايماً بتتحسن مع الوقت والصبر.","\"Hang in there\" = تحملي/اصبري."],
+["You can't make an omelet without breaking eggs; some sacrifices are necessary for success.","ما فيكي تعملي عجة بدون ما تكسري بيض؛ بعض التضحيات ضرورية للنجاح.","\"Can't make an omelet without breaking eggs\" = النجاح بده تضحيات."],
+["It's better late than never; I am so glad you finally decided to start learning English.","أحسن متأخر من ما تيجي أبداً؛ مبسوطة إنك أخيراً قررتي تتعلمي إنجليزي.","\"Better late than never\" = أحسن من ما تعملي أبداً."],
+["Practice makes perfect, and the more you use English in your daily life, the more natural it feels.","الممارسة بتعمل الكمال، وكل ما استعملتي الإنجليزي بحياتك اليومية أكتر، كل ما بيصير أطبع.","\"Practice makes perfect\" = الممارسة بتوصل للإتقان!"],
+// Month 10: News & Media (31)
+["I try to watch the local news every evening to stay informed about what is happening nearby.","بحاول أتفرج على الأخبار المحلية كل مسا حتى أضل مطلعة على اللي عم يصير.","\"Local news\" = أخبار محلية. \"Stay informed\" = تضل مطلع."],
+["The weather forecast says there is a high chance of severe thunderstorms later this afternoon.","نشرة الطقس بتقول في احتمال كبير لعواصف رعدية قوية بعد الظهر.","\"Weather forecast\" = نشرة الطقس. \"Thunderstorms\" = عواصف رعدية."],
+["According to a recent study, reading to your children daily significantly improves their vocabulary.","حسب دراسة حديثة، القراءة لأطفالك كل يوم بتحسن مفرداتهم بشكل كبير.","\"According to\" = حسب. \"Study\" = دراسة."],
+["The city announced that they will be closing Main Street for repairs throughout next week.","المدينة أعلنت إنهم رح يسكروا الشارع الرئيسي للتصليح طوال الأسبوع الجاي.","\"Announced\" = أعلنت. \"Throughout\" = طوال."],
+["Breaking news reports indicate that the mayor will resign from his position effective immediately.","تقارير الأخبار العاجلة بتشير إنو رئيس البلدية رح يستقيل فوراً.","\"Breaking news\" = أخبار عاجلة. \"Resign\" = يستقيل."],
+["A new community center is being built downtown and it is expected to open by next spring.","مركز مجتمعي جديد عم ينبنى بوسط البلد ومتوقع يفتح الربيع الجاي.","\"Is being built\" = عم ينبنى. مبني للمجهول مستمر."],
+["The school district released a statement about the new safety measures being implemented.","المنطقة التعليمية أصدرت بيان عن إجراءات السلامة الجديدة اللي عم تنطبق.","\"School district\" = منطقة تعليمية. \"Statement\" = بيان."],
+["Experts recommend that adults should get at least seven to eight hours of sleep every single night.","الخبراء بينصحوا إنو الكبار لازم يناموا على الأقل سبع لتمان ساعات كل ليلة.","\"Experts recommend\" = الخبراء بينصحوا."],
+["The local food bank is accepting donations to help families in need during the upcoming holiday season.","بنك الأكل المحلي عم يستقبل تبرعات لمساعدة العائلات المحتاجة بموسم الأعياد.","\"Food bank\" = بنك أكل. \"Donations\" = تبرعات. \"In need\" = محتاجة."],
+["A recent survey found that most parents believe schools should teach children about financial literacy.","استطلاع حديث لقى إنو أكتر الأهل بيعتقدوا إنو المدارس لازم تعلم الأطفال الثقافة المالية.","\"Survey\" = استطلاع. \"Financial literacy\" = ثقافة مالية."],
+["The newspaper published an inspiring article about an immigrant family who started a successful bakery.","الجريدة نشرت مقال ملهم عن عيلة مهاجرة فتحت فرن ناجح.","\"Published\" = نشرت. \"Inspiring\" = ملهم."],
+["Traffic is expected to be extremely heavy this weekend due to a major concert at the stadium.","متوقع يكون في زحمة كبيرة هالويكند بسبب حفلة كبيرة بالملعب.","\"Extremely heavy\" = كبيرة جداً."],
+["The governor signed a new law that will provide additional funding for public education statewide.","الحاكم وقع قانون جديد رح يقدم تمويل إضافي للتعليم العام بكل الولاية.","\"Governor\" = حاكم الولاية. \"Funding\" = تمويل."],
+["Scientists have discovered that spending time outdoors can significantly reduce stress and improve mood.","العلماء اكتشفوا إنو قضاء وقت برا ممكن يخفف التوتر ويحسن المزاج بشكل كبير.","\"Scientists discovered\" = العلماء اكتشفوا."],
+["The unemployment rate dropped to its lowest level in a decade, according to the latest government report.","نسبة البطالة نزلت لأدنى مستوى بعشر سنين، حسب آخر تقرير حكومي.","\"Unemployment rate\" = نسبة بطالة. \"Decade\" = عشر سنين."],
+["A viral social media post about a local teacher's kindness has been shared over one hundred thousand times.","بوست على السوشال ميديا عن لطف معلمة محلية انتشر وتشارك أكتر من مية ألف مرة.","\"Viral\" = منتشر. \"Shared\" = تشارك."],
+["Health officials are urging everyone to get their annual flu vaccine before the winter season begins.","مسؤولو الصحة عم يحثوا الكل ياخدوا لقاح الإنفلونزا السنوي قبل ما يبلش الشتي.","\"Urging\" = عم يحثوا. \"Flu vaccine\" = لقاح إنفلونزا."],
+["The city library announced free English conversation classes for adult immigrants every Wednesday evening.","مكتبة المدينة أعلنت عن صفوف محادثة إنجليزي مجانية للمهاجرين الكبار كل أربعاء بالمسا.","مصدر ممتاز لتعلم الإنجليزي!"],
+["A new report shows that families who eat meals together tend to have stronger relationships overall.","تقرير جديد بيبيّن إنو العائلات اللي بتاكل سوا بيكون عندها علاقات أقوى.","\"Tend to\" = بيميلوا. \"Overall\" = بشكل عام."],
+["The price of groceries has increased by approximately fifteen percent compared to just two years ago.","أسعار الأغراض زادت حوالي خمستعش بالمية مقارنة بقبل بس سنتين.","\"Increased by\" = زادت بـ. \"Compared to\" = مقارنة بـ."],
+["Local volunteers organized a massive neighborhood cleanup event that attracted over two hundred participants.","متطوعين محليين نظموا حملة تنظيف حي كبيرة جذبت أكتر من ميتين مشارك.","\"Volunteers\" = متطوعين. \"Cleanup\" = تنظيف."],
+["The documentary highlighted the remarkable stories of immigrant women who overcame incredible obstacles.","الوثائقي سلط الضوء على قصص مذهلة لنساء مهاجرات تغلبن على عقبات لا تصدق.","\"Documentary\" = وثائقي. \"Overcame obstacles\" = تغلبن على عقبات."],
+["Researchers found that children who participate in extracurricular activities perform better academically.","الباحثين لقوا إنو الأطفال اللي بيشاركوا بنشاطات خارجية بيكون أداؤهم أحسن أكاديمياً.","\"Extracurricular\" = خارج المنهج. \"Academically\" = أكاديمياً."],
+["The weather service issued a severe winter storm warning for our entire region through Friday morning.","خدمة الطقس أصدرت تحذير من عاصفة شتوية شديدة لكل منطقتنا لغاية صباح الجمعة.","\"Issued a warning\" = أصدرت تحذير."],
+["A local nonprofit organization is offering free legal consultations to immigrants every first Saturday.","منظمة غير ربحية محلية عم تقدم استشارات قانونية مجانية للمهاجرين كل أول سبت.","\"Nonprofit\" = غير ربحية. \"Consultations\" = استشارات."],
+["The evening news featured a heartwarming story about neighbors who came together to help a family in crisis.","أخبار المسا عرضت قصة مؤثرة عن جيران تجمعوا ليساعدوا عيلة بأزمة.","\"Heartwarming\" = مؤثر. \"Came together\" = تجمعوا."],
+["Social media has become one of the most important tools for staying connected with communities worldwide.","السوشال ميديا صارت من أهم الأدوات للبقاء على تواصل مع مجتمعات حول العالم.","\"Worldwide\" = حول العالم."],
+["The school board approved a new policy that will provide free breakfast to all students regardless of income.","مجلس المدرسة وافق على سياسة جديدة رح تقدم فطور مجاني لكل الطلاب بغض النظر عن الدخل.","\"Regardless of\" = بغض النظر عن. \"Income\" = دخل."],
+["Being a well-informed citizen means reading news from multiple reliable sources before forming opinions.","إنك تكوني مواطنة مطلعة يعني تقرأي أخبار من عدة مصادر موثوقة قبل ما تكوّني آراء.","\"Well-informed\" = مطلع. \"Reliable sources\" = مصادر موثوقة."],
+["The internet has made it possible for anyone to access educational content in almost any language for free.","الإنترنت خلى أي حدا يقدر يوصل لمحتوى تعليمي بأي لغة تقريباً مجاناً.","\"Access\" = يوصل لـ. \"Educational content\" = محتوى تعليمي."],
+// Month 11: Storytelling (30)
+["When I was a little girl growing up in Jordan, my grandmother used to tell me stories every night.","لما كنت بنت صغيرة عم بكبر بالأردن، ستي كانت تحكيلي قصص كل ليلة.","\"Growing up\" = عم بكبر. بداية قصة شخصية."],
+["The moment I first saw the Statue of Liberty from the airplane window, I knew our life was about to change.","اللحظة اللي شفت فيها تمثال الحرية من شباك الطيارة، عرفت إنو حياتنا رح تتغير.","\"The moment\" = اللحظة اللي. بداية درامية."],
+["I still remember the smell of my mother's kitchen and the sound of Arabic music playing in the background.","لسا بتذكر ريحة مطبخ أمي وصوت الموسيقى العربية عم تلعب بالخلفية.","\"I still remember\" = لسا بتذكر. ذاكرة حسية."],
+["As soon as we arrived at the airport, I realized that everything I had known was now thousands of miles away.","أول ما وصلنا عالمطار، أدركت إنو كل شي كنت بعرفه هلق على بعد آلاف الأميال.","\"As soon as\" = أول ما. \"Realized\" = أدركت."],
+["The first winter in America was the coldest I had ever experienced in my entire life.","أول شتي بأمريكا كان أبرد شي عشته بكل حياتي.","\"The coldest I had ever experienced\" = أبرد شي عشته. صيغة تفضيل."],
+["One day, a kind stranger at the supermarket noticed I was struggling and offered to help me find what I needed.","يوم من الأيام، غريب لطيف بالسوبرماركت لاحظ إني عم أعاني وعرض يساعدني ألاقي اللي بدي ياه.","\"Noticed\" = لاحظ. \"Struggling\" = عم أعاني. قصة لطيفة."],
+["At first, I was too embarrassed to speak English because I was terrified of making mistakes in front of people.","بالأول، كنت كتير محرجة أحكي إنجليزي لأني كنت خايفة أغلط قدام الناس.","\"Embarrassed\" = محرج. \"Terrified\" = خايف كتير."],
+["Little by little, day by day, my confidence grew as I started to understand more and speak more fluently.","شوي شوي، يوم بيوم، ثقتي زادت كل ما صرت أفهم أكتر وأحكي بطلاقة أكتر.","\"Little by little\" = شوي شوي. \"Confidence grew\" = ثقتي زادت."],
+["The turning point in my life came when I finally got the courage to introduce myself to my neighbor.","نقطة التحول بحياتي إجت لما أخيراً جمعت شجاعتي وعرّفت عن حالي لجارتي.","\"Turning point\" = نقطة تحول."],
+["She became my closest friend, and through her, I discovered a whole community of people just like me.","صارت أقرب صاحبة إلي، ومن خلالها اكتشفت مجتمع كامل من ناس مثلي.","\"Through her\" = من خلالها. قوة الصداقة."],
+["Looking back now, I realize that the struggles we went through only made us stronger as a family.","لما بطلع ورا هلق، بدرك إنو الصعوبات اللي مرينا فيها بس خلتنا أقوى كعيلة.","\"Looking back\" = لما بطلع ورا. \"Struggles\" = صعوبات."],
+["My children often ask me to tell them stories about what life was like back in Jordan when I was their age.","ولادي كتير بيطلبوا مني أحكيلهم قصص عن كيف كانت الحياة بالأردن لما كنت بعمرهم.","\"When I was their age\" = لما كنت بعمرهم."],
+["There was one particular moment when I truly felt like America had become my second home forever.","كان في لحظة معينة لما فعلاً حسيت إنو أمريكا صارت بيتي التاني للأبد.","\"Particular moment\" = لحظة معينة."],
+["The hardest part of our journey was saying goodbye to my parents at the airport that cold December morning.","أصعب شي برحلتنا كان وداع أهلي بالمطار هداك صباح كانون البارد.","\"The hardest part\" = أصعب شي. لحظة مؤثرة."],
+["Years later, when my mother finally visited us in America, she cried tears of joy and pride.","بعد سنين، لما أمي أخيراً زارتنا بأمريكا، بكت دموع فرح وفخر.","\"Tears of joy\" = دموع فرح."],
+["I never imagined that one day I would be helping other immigrant women navigate their new lives here.","ما تخيلت يوم إني رح أكون عم بساعد نساء مهاجرات تانيات يتدبروا حياتهم الجديدة هون.","\"Navigate\" = يتدبروا/يتأقلموا."],
+["Every time I hear my children switch effortlessly between Arabic and English, my heart fills with pride.","كل ما بسمع ولادي يتنقلوا بسهولة بين العربي والإنجليزي، قلبي بيمتلئ فخر.","\"Switch effortlessly\" = يتنقلوا بسهولة. لحظة فخر!"],
+["The story of our family is not just about surviving in a new country; it is about truly thriving in one.","قصة عيلتنا مش بس عن النجاة ببلد جديد؛ هي عن الازدهار الحقيقي فيه.","\"Surviving\" = النجاة. \"Thriving\" = الازدهار. فرق مهم!"],
+["If someone had told me ten years ago that I would be where I am today, I would never have believed them.","لو حدا قلي من عشر سنين إني رح أكون وين ما أنا اليوم، ما كنت صدقته.","الشرط التالت مع قصة شخصية. جملة قوية!"],
+["My journey taught me that home is not just a place on a map; it is wherever your loved ones are.","رحلتي علمتني إنو البيت مش بس مكان عالخريطة؛ هو وين ما كان أحبابك.","\"Home is wherever your loved ones are\" = حكمة عميقة وجميلة."],
+["And that is how a shy girl from a small town in Jordan became a confident woman building her dreams in America.","وهيك بنت خجولة من قرية صغيرة بالأردن صارت مرا واثقة عم تبني أحلامها بأمريكا.","\"Shy\" = خجول. \"Confident\" = واثق. رحلة تحول!"],
+["I wrote down our family's story so that my grandchildren would one day understand where they truly came from.","كتبت قصة عيلتنا حتى أحفادي يوم من الأيام يفهموا من وين فعلاً إجوا.","\"Wrote down\" = كتبت. \"Grandchildren\" = أحفاد."],
+["The most powerful stories are the ones that remind us of our shared humanity and common dreams.","أقوى القصص هي اللي بتذكرنا بإنسانيتنا المشتركة وأحلامنا الواحدة.","\"Shared humanity\" = إنسانية مشتركة."],
+["They say that the pen is mightier than the sword, and I believe that stories have the power to change hearts.","بقولوا إنو القلم أقوى من السيف، وبآمن إنو القصص عندها قوة تغير القلوب.","\"The pen is mightier than the sword\" = القلم أقوى من السيف."],
+["Every person you meet has a story worth listening to, and every story deserves to be told with respect.","كل شخص بتقابليه عنده قصة تستحق تنسمع، وكل قصة بتستحق تنحكى باحترام.","\"Worth listening to\" = تستحق تنسمع. حكمة ختامية."],
+["Our stories connect us to our past, define our present, and inspire the generations that will come after us.","قصصنا بتربطنا بماضينا، بتعرّف حاضرنا، وبتلهم الأجيال اللي رح تيجي بعدنا.","\"Connect\" = تربط. \"Inspire\" = تلهم."],
+["I began writing in a journal every night, and it became one of the best habits I have ever developed.","بلشت أكتب بدفتر كل ليلة، وصار من أحسن العادات اللي عملتها بحياتي.","\"Journal\" = دفتر يوميات. عادة ممتازة!"],
+["The children in our community love to hear about life in the Middle East and our beautiful traditions.","أطفال مجتمعنا بيحبوا يسمعوا عن الحياة بالشرق الأوسط وتقاليدنا الحلوة.","\"Middle East\" = الشرق الأوسط. \"Traditions\" = تقاليد."],
+["Someday, I hope to publish a book about our family's journey from Jordan to building a life in America.","يوم من الأيام، بتمنى أنشر كتاب عن رحلة عيلتنا من الأردن لبناء حياة بأمريكا.","\"Publish\" = أنشر. \"Journey\" = رحلة. حلم جميل!"],
+["The end of one chapter is always the beginning of another, and our story is still being written every day.","نهاية فصل دايماً هي بداية فصل تاني، وقصتنا لسا عم تنكتب كل يوم.","\"Chapter\" = فصل. نهاية مفتوحة. قصتك لسا مستمرة!"],
+// Month 12: Debates & Discussions (31)
+["In my honest opinion, learning a second language should be mandatory for all students in American schools.","برأيي الصريح، تعلم لغة تانية لازم يكون إلزامي لكل الطلاب بالمدارس الأمريكية.","\"In my honest opinion\" = برأيي الصريح. بداية نقاش."],
+["I completely understand your point of view, but I respectfully disagree with your conclusion.","بفهم وجهة نظرك بالكامل، بس باحترام ما بوافق على استنتاجك.","\"Respectfully disagree\" = ما بوافق باحترام. مهارة نقاش مهمة."],
+["On the one hand, technology makes our lives significantly easier; on the other hand, it can be very addictive.","من ناحية، التكنولوجيا بتسهل حياتنا بشكل كبير؛ ومن ناحية تانية، ممكن تكون مسببة للإدمان.","\"On one hand...on the other hand\" = من ناحية...من ناحية تانية. عرض وجهتي نظر."],
+["What are the main advantages and disadvantages of raising children in a bilingual household?","شو أهم إيجابيات وسلبيات تربية أطفال ببيت ثنائي اللغة؟","\"Advantages and disadvantages\" = إيجابيات وسلبيات."],
+["I strongly believe that every child deserves access to high-quality education regardless of their background.","بآمن بقوة إنو كل طفل يستحق يوصل لتعليم عالي الجودة بغض النظر عن خلفيته.","\"Regardless of\" = بغض النظر عن."],
+["Some people argue that social media brings people closer, while others claim it actually drives them apart.","بعض الناس بيقولوا إنو السوشال ميديا بتقرب الناس، بينما غيرهم بيقولوا بتبعدهم.","\"Some argue...while others claim\" = بعض بيقولوا...وغيرهم بيقولوا."],
+["Could you elaborate on what you mean by that? I want to make sure I fully understand your perspective.","ممكن توضحي أكتر شو قصدك؟ بدي أتأكد إني فاهمة وجهة نظرك بالكامل.","\"Elaborate\" = توضح أكتر. \"Perspective\" = وجهة نظر."],
+["The evidence clearly suggests that children who read regularly tend to perform significantly better in school.","الأدلة بتشير بوضوح إنو الأطفال اللي بيقرأوا بانتظام بيكون أداؤهم أحسن بالمدرسة.","\"Evidence suggests\" = الأدلة بتشير. حجة مبنية على أدلة."],
+["While I appreciate your argument, I think there are several important factors you haven't considered yet.","مع إني بقدر حجتك، بفتكر في عدة عوامل مهمة لسا ما أخذتيهم بعين الاعتبار.","\"Factors\" = عوامل. \"Haven't considered\" = ما أخذتيهم بعين الاعتبار."],
+["In my personal experience, the benefits of immigrating to a new country far outweigh the many challenges.","من تجربتي الشخصية، فوائد الهجرة لبلد جديد بتفوق بكتير على التحديات الكتيرة.","\"Outweigh\" = بتفوق على. \"Personal experience\" = تجربة شخصية."],
+["How do you think we can effectively encourage more people in our community to participate in local elections?","كيف بتفتكري فينا نشجع ناس أكتر بمجتمعنا يشاركوا بالانتخابات المحلية بفعالية؟","\"Effectively\" = بفعالية. سؤال نقاشي مهم."],
+["That is a very valid and well-thought-out point, and I think it definitely adds to this important discussion.","هاي نقطة كتير صحيحة ومدروسة، وبفتكر أكيد بتضيف لهالنقاش المهم.","\"Valid point\" = نقطة صحيحة. تقدير رأي الآخر."],
+["I think the key issue here is finding a healthy balance between preserving our traditions and adapting to new ones.","بفتكر المسألة الأساسية هون هي إيجاد توازن صحي بين الحفاظ على تقاليدنا والتأقلم مع جديدة.","\"Key issue\" = المسألة الأساسية. \"Balance\" = توازن."],
+["Research consistently shows that diverse communities tend to be more innovative and economically successful.","الأبحاث بتبيّن باستمرار إنو المجتمعات المتنوعة بتميل تكون أكتر ابتكاراً ونجاحاً اقتصادياً.","\"Research shows\" = الأبحاث بتبيّن. حجة علمية."],
+["Would you mind sharing your thoughts on how we can better support immigrant families in our school district?","ممكن تشاركينا أفكارك عن كيف فينا ندعم العائلات المهاجرة بمنطقتنا التعليمية أحسن؟","سؤال محترم يطلب رأي. مهارة نقاش عالية."],
+["I used to think that success meant having a lot of money, but now I believe it means being content and at peace.","كنت أفتكر إنو النجاح يعني يكون عندك مصاري كتير، بس هلق بآمن إنو يعني الرضا وراحة البال.","\"Content\" = راضي. \"At peace\" = براحة بال. تطور فكري."],
+["To summarize the main points of our discussion: education, community, and family are our strongest foundations.","لتلخيص النقاط الرئيسية لنقاشنا: التعليم والمجتمع والعيلة هم أقوى أساساتنا.","\"To summarize\" = لتلخيص. مهارة ختام النقاش."],
+["I have come to realize that the ability to see things from multiple perspectives is one of life's greatest gifts.","صرت أدرك إنو القدرة على شوف الأمور من عدة زوايا هي من أعظم هدايا الحياة.","\"Multiple perspectives\" = عدة زوايا."],
+["Whether we agree or disagree on specific issues, mutual respect should always be the foundation of every conversation.","سواء اتفقنا أو اختلفنا على مواضيع محددة، الاحترام المتبادل لازم يكون أساس كل محادثة.","\"Mutual respect\" = احترام متبادل."],
+["The greatest sign of intelligence is not knowing all the answers, but rather knowing which questions to ask.","أكبر علامة على الذكاء مش إنك تعرفي كل الأجوبة، بل إنك تعرفي شو الأسئلة اللي لازم تسأليها.","\"Rather\" = بل. حكمة عميقة!"],
+["I firmly believe that every single person has something valuable to teach us if we are willing to truly listen.","بآمن بقوة إنو كل شخص عنده شي قيّم يعلمنا ياه إذا كنا مستعدين نسمع فعلاً.","\"Willing to listen\" = مستعدين نسمع."],
+["After completing three full levels of this course, you now have the tools to express yourself with confidence and clarity.","بعد إنهاء تلات مستويات كاملة من هالكورس، هلق عندك الأدوات تعبري عن حالك بثقة ووضوح.","\"Confidence and clarity\" = ثقة ووضوح. مبروك!"],
+["Your ability to communicate in English has grown tremendously, and you should be incredibly proud of what you have accomplished.","قدرتك على التواصل بالإنجليزي كبرت بشكل هائل، ولازم تكوني فخورة كتير بشو حققتي.","\"Tremendously\" = بشكل هائل. إنجاز كبير!"],
+["Remember that language learning is a lifelong journey, and every conversation is an opportunity to grow and improve.","تذكري إنو تعلم اللغة هو رحلة العمر، وكل محادثة هي فرصة للنمو والتحسن.","\"Lifelong journey\" = رحلة العمر."],
+["The world needs more people who can bridge cultures, build understanding, and bring diverse communities together.","العالم بحاجة لناس أكتر يقدروا يربطوا بين الثقافات ويبنوا تفاهم ويجمعوا مجتمعات متنوعة.","\"Bridge cultures\" = يربط بين الثقافات. مهمتك!"],
+["You started this journey as a student of English, and you are now becoming a teacher, a leader, and an inspiration.","بلشتي هالرحلة كطالبة إنجليزي، وهلق عم تصيري معلمة وقائدة وملهمة.","\"Inspiration\" = ملهمة. إنتِ ملهمة!"],
+["Never let anyone tell you that your accent is a weakness; it is a beautiful badge of courage and resilience.","ما تخلي حدا يقولك إنو لهجتك ضعف؛ هي وسام شجاعة وصمود.","\"Badge of courage\" = وسام شجاعة. رسالة قوية!"],
+["The fact that you can think in one language and express yourself in another is nothing short of extraordinary.","إنك بتقدري تفكري بلغة وتعبري عن حالك بلغة تانية هاد شي استثنائي.","\"Nothing short of extraordinary\" = شي استثنائي بالفعل!"],
+["Congratulations on completing Level Three! You have proven that dedication and persistence lead to incredible growth.","مبروك على إنهاء المستوى التالت! أثبتي إنو الالتزام والإصرار بيوصلوا لنمو لا يصدق.","\"Proven\" = أثبتت. \"Persistence\" = إصرار. مبروك!"],
+["Your journey with English does not end here; it continues every time you read, speak, think, or dream in this beautiful language.","رحلتك مع الإنجليزي ما بتنتهي هون؛ بتستمر كل ما قرأتي أو حكيتي أو فكرتي أو حلمتي بهاللغة الحلوة.","رحلتك مستمرة. إنتِ قادرة على كل شي!"]
+];
+
+let st={m:0,l:0};
+const prog=JSON.parse(localStorage.getItem('ec3-prog')||'{}');
+const started=localStorage.getItem('ec3-started');
+function saveProg(){localStorage.setItem('ec3-prog',JSON.stringify(prog))}
+function getGlobalIdx(m,l){let idx=0;for(let i=0;i<m;i++)idx+=MS[i].c;return idx+l}
+function getMonthLesson(gi){let m=0,idx=gi;while(m<MS.length&&idx>=MS[m].c){idx-=MS[m].c;m++}return{m,l:idx}}
+function completedInMonth(m){let s=getGlobalIdx(m,0),c=0;for(let i=0;i<MS[m].c;i++)if(prog[s+i])c++;return c}
+function totalCompleted(){let c=0;for(let k in prog)if(prog[k])c++;return c}
+function speak(text,rate){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate||0.65;speechSynthesis.speak(u)}
+function exportProgress(){return btoa(unescape(encodeURIComponent(JSON.stringify({p:prog,s:started?'1':'0',v:3}))))}
+function importProgress(code){try{const d=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));if(!d.p)throw 0;Object.keys(prog).forEach(k=>delete prog[k]);Object.assign(prog,d.p);saveProg();if(d.s==='1')localStorage.setItem('ec3-started','1');return true}catch(e){return false}}
+function showBackupPanel(){const bp=document.getElementById('backup-panel');if(bp)bp.classList.toggle('show')}
+function doExport(){document.getElementById('bp-code').value=exportProgress();document.getElementById('bp-msg').className='bp-msg ok';document.getElementById('bp-msg').textContent='تم!'}
+function doCopy(){const ta=document.getElementById('bp-code');ta.select();navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById('bp-msg').className='bp-msg ok';document.getElementById('bp-msg').textContent='تم النسخ!'})}
+function doImport(){const code=document.getElementById('bp-code').value;if(!code.trim()){document.getElementById('bp-msg').className='bp-msg err';document.getElementById('bp-msg').textContent='الصقي الكود أولاً.';return}if(importProgress(code)){document.getElementById('bp-msg').className='bp-msg ok';document.getElementById('bp-msg').textContent='تم!';setTimeout(()=>location.reload(),1000)}else{document.getElementById('bp-msg').className='bp-msg err';document.getElementById('bp-msg').textContent='الكود مش صحيح.'}}
+function render(){const app=document.getElementById('app');if(!started){app.innerHTML=`<header><h1>تعلمي الإنجليزي</h1><div class="level-badge">المستوى الثالث</div><p>كورس سنة - ٣٦٥ درس متوسط-متقدم</p></header><div class="welcome"><h2>أهلاً بالمستوى الثالث!</h2><p>جمل أطول وأعقد، قواعد متقدمة مثل الشرط والمبني للمجهول، تعابير وأمثال إنجليزية، ومواضيع مهنية وقانونية.</p><p style="margin-top:24px"><strong>الشهور:</strong></p><p style="font-size:0.9rem;line-height:2">١. الشرط والاحتمالات<br>٢. المبني للمجهول<br>٣. نقل الكلام<br>٤. الأفعال المركبة<br>٥. الشغل والمهنية<br>٦. السكن والجيران<br>٧. القانون والحكومة<br>٨. التربية بأمريكا<br>٩. تعابير وأمثال<br>١٠. الأخبار والإعلام<br>١١. القصص والروايات<br>١٢. النقاش والحوار</p><button class="start-btn" onclick="localStorage.setItem('ec3-started','1');render()">يلا نبلش!</button></div>`;return}renderLesson()}
+function renderLesson(){const app=document.getElementById('app');const gi=getGlobalIdx(st.m,st.l);const lesson=L[gi];const done=prog[gi];const tc=totalCompleted();const pct=Math.round(tc/365*100);let mt='';for(let i=0;i<MS.length;i++){const mc=completedInMonth(i);const f=mc===MS[i].c;mt+=`<div class="month-tab${i===st.m?' active':''}" onclick="st.m=${i};st.l=0;renderLesson()">${f?'<span class="check">&#10003;</span>':''}${i+1}. ${MS[i].n}</div>`}let dots='';for(let i=0;i<MS[st.m].c;i++){const d=getGlobalIdx(st.m,i);const c=i===st.l?'current':(prog[d]?'done':'');dots+=`<div class="dot ${c}" onclick="st.l=${i};renderLesson()"></div>`}app.innerHTML=`<header><button class="gear-btn" onclick="showBackupPanel()">&#9881;</button><h1>تعلمي الإنجليزي</h1><div class="level-badge">المستوى الثالث</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="progress-text">${tc} من ٣٦٥ (${pct}%)</div></header><div id="backup-panel" class="backup-panel"><h3>&#128190; نسخة احتياطية</h3><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px"><button class="bp-btn" onclick="doExport()">&#128190; حفظ</button><button class="bp-btn" onclick="doCopy()">&#128203; نسخ</button><button class="bp-btn restore" onclick="doImport()">&#128260; استرجاع</button><button class="bp-btn close" onclick="showBackupPanel()">&#10005;</button></div><textarea id="bp-code" placeholder="كود النسخة الاحتياطية..."></textarea><div id="bp-msg" class="bp-msg"></div></div><div class="months">${mt}</div><div class="month-title">${MS[st.m].e} - ${MS[st.m].n}</div><div class="lesson-nav"><span>درس ${st.l+1} من ${MS[st.m].c}</span><div class="lesson-dots">${dots}</div></div><div class="card"><div class="card-header"><span class="day-num">اليوم ${gi+1} من ٣٦٥</span>${done?'<span style="color:#16a34a;font-size:0.85rem">&#10003; تم</span>':''}</div><div class="card-body"><div class="english-sentence" onclick="speak('${lesson[0].replace(/'/g,"\\'")}')"> ${lesson[0]}</div><div class="controls"><button class="btn btn-listen" onclick="speak('${lesson[0].replace(/'/g,"\\'")}')">&#9654; اسمعيها</button><button class="btn btn-listen" onclick="speak('${lesson[0].replace(/'/g,"\\'")}',0.4)">&#128034; ببطء</button><button class="btn btn-translate" onclick="document.getElementById('tr').classList.toggle('show')">&#127760; الترجمة</button><button class="btn btn-tip" onclick="document.getElementById('tp').classList.toggle('show')">&#128161; نصيحة</button><button class="btn btn-words" onclick="showWords()">&#128220; كلمة كلمة</button></div><div id="word-area"></div><div id="tr" class="translation">${lesson[1]}</div><div id="tp" class="tip">${lesson[2]}</div><button class="btn btn-complete${done?' done':''}" onclick="markDone(${gi})">${done?'&#10003; تم':'&#10003; خلصت هالدرس'}</button></div></div><div class="bottom-nav"><button class="nav-btn" ${gi>=364?'disabled':''}onclick="goNext()">الجاي &#8592;</button><span class="lesson-count">${gi+1}/365</span><button class="nav-btn" ${gi<=0?'disabled':''}onclick="goPrev()">&#8594; السابق</button></div>`;setTimeout(()=>{const a=document.querySelector('.month-tab.active');if(a)a.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})},100)}
+function showWords(){const gi=getGlobalIdx(st.m,st.l);const w=L[gi][0].replace(/[.,!?;:'"]/g,'').split(' ');const a=document.getElementById('word-area');if(a.innerHTML){a.innerHTML='';return}a.innerHTML='<div class="word-mode">'+w.map(x=>`<button class="word-btn" onclick="speak('${x.replace(/'/g,"\\'")}',0.5)">${x}</button>`).join('')+'</div>'}
+function markDone(gi){if(prog[gi])delete prog[gi];else prog[gi]=true;saveProg();renderLesson()}
+function goNext(){const gi=getGlobalIdx(st.m,st.l);if(gi>=364)return;const n=getMonthLesson(gi+1);st.m=n.m;st.l=n.l;renderLesson();window.scrollTo(0,0)}
+function goPrev(){const gi=getGlobalIdx(st.m,st.l);if(gi<=0)return;const n=getMonthLesson(gi-1);st.m=n.m;st.l=n.l;renderLesson();window.scrollTo(0,0)}
+const ld=Object.keys(prog).map(Number).sort((a,b)=>b-a)[0];if(ld!==undefined&&ld<364){const n=getMonthLesson(ld+1);st.m=n.m;st.l=n.l}
+render();
+</script>
+</body>
+</html>
